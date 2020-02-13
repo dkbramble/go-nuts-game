@@ -6,7 +6,7 @@ sys.path.append('..')
 import league
 from components import *
 from player import Player
-from overlay import Overlay
+from components.overlay import Overlay
 
 
 """This file is garbage. It was a hastily coded mockup
