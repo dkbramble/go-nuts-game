@@ -11,7 +11,7 @@ class SoundManager():
 
     def __init__(self):
         pygame.mixer.init()
-        self.sound_path = './assets/sounds/'
+        self.sound_path = '../assets/sounds/'
 
     def bgm_start(self, file):
         file_path = self.sound_path + file

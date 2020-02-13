@@ -6,7 +6,7 @@ class MusicButton(league.DUGameObject):
     def __init__(self):
         super().__init__(self)
         self._layer = 1000
-        self.font = pygame.font.Font('./assets/IndieFlower.ttf',32)
+        self.font = pygame.font.Font('../assets/IndieFlower.ttf',32)
         self.image = pygame.Surface([100, 40])
         self.image.fill((100, 149, 237))
         self.text = self.font.render("Music: On", True, (0,0,0))
@@ -24,7 +24,6 @@ class MusicButton(league.DUGameObject):
 
         if 800 > mouse[0] > 699 and 40 > mouse[1] > 0:
             click = pygame.mouse.get_pressed()
-            print(click)
             if click[0] == 1 and self.wait_time < 1:
                 s = SoundManager()
                 s.bgm_control() 
