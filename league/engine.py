@@ -16,6 +16,7 @@ class Engine:
     running - Whether or not the engine is currently in the main game loop.
     clock - The real world clock for elapsed time.
     events - A dictionary of events and handling functions.
+    registered_keys - a list of keystroke events that will be checked by the game
     key_events - A dictionary of events and handling functions for KEYDOWN events.
                  Please note that the backtick (`) key is default.
     objects - A list of updateable game objects.
@@ -33,6 +34,7 @@ class Engine:
         self.running = False
         self.clock = None 
         self.events = {}
+        self.registered_keys = []
         self.key_events = {}
         self.key_events[Settings.statistics_key] = self.toggle_statistics
         self.objects = []
@@ -112,6 +114,13 @@ class Engine:
     def add_group(self, group):
         self.drawables.add(group.sprites())
 
+    # Binds a key to an event. Added this way to allow for multiple keys at once.
+    # key - key event to be linked
+    # function - the function that will be triggered on key event
+    def add_key(self, key, function):
+        self.registered_keys.append(key)
+        self.key_events[key] = function
+
     # Show/Hide the engine statistics
     def toggle_statistics(self):
         self.visible_statistics = not self.visible_statistics
@@ -139,8 +148,16 @@ class Engine:
             # Check "normal" events
             if event.type in self.events.keys():
                 self.events[event.type](self.game_delta_time)
-            # Check if these key_event keys were pressed
-            if event.type == pygame.KEYDOWN:
-                if event.key in self.key_events.keys():
-                    self.key_events[event.key](self.game_delta_time) 
-
+        if pygame.key.get_pressed()[pygame.K_b] or pygame.key.get_pressed()[pygame.K_n]:
+            pass
+        elif pygame.key.get_pressed()[pygame.K_a]:
+            if pygame.key.get_pressed()[pygame.K_k]:
+                self.key_events[pygame.K_b](self.game_delta_time, -1) 
+        elif pygame.key.get_pressed()[pygame.K_d]:
+            if pygame.key.get_pressed()[pygame.K_k]:
+                self.key_events[pygame.K_b](self.game_delta_time, 1) 
+        for key in self.registered_keys:
+            # Check if these key_event keys were presseds
+            if pygame.key.get_pressed()[key]:
+                self.key_events[key](self.game_delta_time) 
+        

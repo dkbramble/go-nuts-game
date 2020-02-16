@@ -13,6 +13,8 @@ class Player(Character):
         super().__init__(z, x, y)
         # This unit's health
         self.health = 100
+        self.climb = False
+        self.climb_direction = 0
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
@@ -46,33 +48,34 @@ class Player(Character):
         self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
 
     def move_left(self, time):
-        amount = self.delta * time
-        try:
-            if self.x - amount < 0:
-                raise OffScreenLeftException
-            else:
-                self.x = self.x - amount
-                self.update(0)
-                while(len(self.collisions) != 0):
-                    self.x = self.x + amount
-                    self.update(0)
-        except:
-            pass
-
-    def move_right(self, time):
-        self.collisions = []
-        amount = self.delta * time
-        try:
-            if self.x + amount > self.world_size[0] - Settings.tile_size:
-                raise OffScreenRightException
-            else:
-                self.x = self.x + amount
-                self.update(0)
-                while(len(self.collisions) != 0):
+        if not self.climb:
+            amount = self.delta * time
+            try:
+                if self.x - amount < 0:
+                    raise OffScreenLeftException
+                else:
                     self.x = self.x - amount
                     self.update(0)
-        except:
-            pass
+                    while(len(self.collisions) != 0):
+                        self.x = self.x + amount
+                        self.update(0)
+            except:
+                pass
+
+    def move_right(self, time):
+        if not self.climb:
+            amount = self.delta * time
+            try:
+                if self.x + amount > self.world_size[0] - Settings.tile_size:
+                    raise OffScreenRightException
+                else:
+                    self.x = self.x + amount
+                    self.update(0)
+                    while(len(self.collisions) != 0):
+                        self.x = self.x - amount
+                        self.update(0)
+            except:
+                pass
 
     def move_up(self, time):
         self.collisions = []
@@ -89,8 +92,18 @@ class Player(Character):
                     self.y = self.y + amount
                     self.update(0)
                     self.collisions = []
-        except:
+            if self.climb:
+                amount = self.delta * time * self.climb_direction
+                self.x = self.x + amount * 3
+                self.update(0)
+                if len(self.collisions) == 0:
+                    self.climb = False
+                while(len(self.collisions) != 0):
+                    self.x = self.x - amount
+                    self.update(0)
+        except: 
             pass
+
 
     def move_down(self, time):
         amount = self.delta * time
@@ -106,8 +119,47 @@ class Player(Character):
                     self.y = self.y - amount
                     self.update(0)
                     self.collisions = []
+            if self.climb:
+                amount = self.delta * time * self.climb_direction
+                self.x = self.x + amount
+                self.update(0)
+                if len(self.collisions) == 0:
+                    self.x = self.x - amount
+                    self.update(0)
+                    self.climb = False
+                while(len(self.collisions) != 0):
+                    self.x = self.x - amount
+                    self.update(0)
         except:
             pass
+        
+    #Hold right/left to run into an impassible object and press 'k' to climb. climbing will restrict horizontal movement until either the 
+    #space bar is pressed or you reach the top or bottom of a the object.
+    def climb_on(self, time, direction):
+        amount = self.delta * time * direction
+        self.climb_direction = direction
+        try:
+            if self.x + amount > self.world_size[0] - Settings.tile_size and direction > 0:
+                raise OffScreenRightException
+            elif self.x + amount < 0 and direction < 0:
+                raise OffScreenLeftException
+            else:
+                self.x = self.x + amount
+                self.update(0)
+                if len(self.collisions) == 0:
+                    self.x = self.x - amount
+                    self.update(0)
+                else:
+                    self.climb = True
+                    while(len(self.collisions) != 0):
+                        self.x = self.x - amount
+                        self.update(0)
+
+        except:
+            pass
+
+    def climb_off(self, time):
+        self.climb = False
 
     def update(self, time):
         self.rect.x = self.x
