@@ -27,7 +27,7 @@ class MusicButton(league.DUGameObject):
             if click[0] == 1 and self.wait_time < 1:
                 s = SoundManager()
                 s.bgm_control() 
-                self.wait_time = 20
+                self.wait_time = 20 #add deltatime later
             if self.wait_time > 0:
                 self.wait_time = self.wait_time - 1
             self.image.fill((0, 130, 0))

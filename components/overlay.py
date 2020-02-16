@@ -1,6 +1,5 @@
 import league
 import pygame
-from components import *
 
 class Overlay(league.DUGameObject):
     def __init__(self, player):
