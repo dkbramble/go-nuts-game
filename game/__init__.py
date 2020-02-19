@@ -2,5 +2,4 @@
 
 """
 
-
-
+from .player import Player
