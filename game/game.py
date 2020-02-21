@@ -8,7 +8,7 @@ from components import *
 from player import Player
 from enemies.spider import Spider
 from enemies.bee import Bee
-from enemies.ant import Ant
+from enemies.leafbug import Leafbug
 from components.overlay import Overlay
 
 def main():
@@ -44,7 +44,7 @@ def main():
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    a = Ant(10, 100, 200, 120)
+    a = Leafbug(10, 100, 200, 120)
     a.blocks.add(t.impassable)
     a.world_size = world_size
     a.rect = a.image.get_rect()

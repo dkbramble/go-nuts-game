@@ -6,7 +6,7 @@ sys.path.append('..')
 import league
 
 
-class Ant(Character):
+class Leafbug(Character):
 
     def __init__(self, z=0, x=0, y=0, motion_range=100):
         super().__init__(z, x, y)
@@ -30,9 +30,9 @@ class Ant(Character):
         temp = 0
         right = []
         left = []
-        for filename in sorted(os.listdir("./enemies/ladybug/")):
+        for filename in sorted(os.listdir("./enemies/leafbug/")):
             print(filename)
-            tmp = pygame.image.load('./enemies/ladybug/' + filename).convert_alpha()
+            tmp = pygame.image.load('./enemies/leafbug/' + filename).convert_alpha()
             tmp = pygame.transform.scale(tmp, (64, 64))
             right.append(tmp)
             left.append(pygame.transform.flip(tmp, True, False))
