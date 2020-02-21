@@ -33,7 +33,8 @@ class Bee(Character):
         temp = 0
         right = []
         left = []
-        for filename in os.listdir("./enemies/bee/"):
+        for filename in sorted(os.listdir("./enemies/bee/")):
+            print(filename)
             tmp = pygame.image.load('./enemies/bee/' + filename).convert_alpha()
             tmp = pygame.transform.scale(tmp, (64, 64))
             right.append(tmp)

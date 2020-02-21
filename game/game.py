@@ -11,15 +11,6 @@ from enemies.bee import Bee
 from enemies.ant import Ant
 from components.overlay import Overlay
 
-
-"""This file is garbage. It was a hastily coded mockup
-to demonstrate how to use the engine.  We will be creating
-a Game class that organizes this code better (and is
-reusable).
-"""
-
-# Function to call when colliding with zombie
-
 def main():
     e = league.Engine("Go Nutts!")
     e.init_pygame()
@@ -83,7 +74,7 @@ def main():
     pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 2, 150 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
-    pygame.time.set_timer(pygame.USEREVENT + 4, 500 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 4, 100 // league.Settings.gameTimeFactor)
 
     e.key_events[pygame.K_a] = p.move_left
     e.key_events[pygame.K_d] = p.move_right
