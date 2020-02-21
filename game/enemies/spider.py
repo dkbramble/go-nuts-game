@@ -27,7 +27,7 @@ class Spider(Character):
         self.delta = 512
         # The image to use.  This will change frequently
         # in an animated Player class.
-        self.sprites = league.Spritesheet("../enemies/LPC_Spiders/spider01.png", league.Settings.tile_size*2, 10)
+        self.sprites = league.Spritesheet("./enemies/LPC_Spiders/spider01.png", league.Settings.tile_size/2, 10)
         self.sp = self.sprites.sprites[2]
         self.image_num = 0
         self.image = self.sp.image
@@ -51,7 +51,7 @@ class Spider(Character):
         self.collider.rect = self.collider.image.get_rect()
 
     def load_images(self):
-        sprites = league.Spritesheet("../enemies/LPC_Spiders/spider01.png", league.Settings.tile_size*2, 10)
+        sprites = league.Spritesheet("./enemies/LPC_Spiders/spider01.png", league.Settings.tile_size*2, 10)
         images = []
         for i in range(0,8):
             images.append(sprites.sprites[0].image)

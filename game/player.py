@@ -1,6 +1,7 @@
 from league import *
 from components import *
 import pygame
+import random
 
 class Player(Character):
     """This is a sample class for a player object.  A player
@@ -80,8 +81,8 @@ class Player(Character):
     def move_up(self, time):
         self.collisions = []
         amount = self.delta * time
-        s = SoundManager()
-        s.play_sound('thanks.wav')
+        # s = SoundManager()
+        # s.play_sound('thanks.wav')
         try:
             if self.y - amount < 0:
                 raise OffScreenTopException
@@ -107,8 +108,8 @@ class Player(Character):
 
     def move_down(self, time):
         amount = self.delta * time
-        s = SoundManager()
-        s.play_sound('oh.wav')
+        # s = SoundManager()
+        # s.play_sound('oh.wav')
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
@@ -174,5 +175,8 @@ class Player(Character):
     def ouch(self):
         now = pygame.time.get_ticks()
         if now - self.last_hit > 1000:
+            s = SoundManager()
+            oucies_soundies = ['ow_1.wav','ow_2.wav','op.wav']
+            s.play_sound(random.choice(oucies_soundies))
             self.health = self.health - 10
             self.last_hit = now

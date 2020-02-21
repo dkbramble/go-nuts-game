@@ -23,7 +23,7 @@ class Ant(Character):
         self.delta = 512
         # The image to use.  This will change frequently
         # in an animated Player class.
-        self.sprites = league.Spritesheet("../enemies/LPC_Spiders/spider01.png", league.Settings.tile_size*2, 10)
+        self.sprites = league.Spritesheet("./enemies/LPC_Spiders/spider01.png", league.Settings.tile_size/2, 10)
         self.sp = self.sprites.sprites[2]
         self.image = self.sp.image
         # self.image = pygame.image.load('../assets/ant.png').convert_alpha()

@@ -6,14 +6,10 @@ sys.path.append('..')
 import league
 from components import *
 from player import Player
-<<<<<<< HEAD:examples/game.py
-from overlay import Overlay
 from enemies.spider import Spider
 from enemies.bee import Bee
 from enemies.ant import Ant
-=======
 from components.overlay import Overlay
->>>>>>> master:game/game.py
 
 
 """This file is garbage. It was a hastily coded mockup
@@ -37,7 +33,7 @@ def main():
     e.drawables.add(t.passable.sprites())
     m = SoundManager()
     m.bgm_start('Song_For_Someone.wav')
-    p = Player(2, 400, 300)
+    p = Player(2, 400, 200)
     o = Overlay(p)
     bu = MusicButton()
     p.blocks.add(t.impassable)
@@ -47,17 +43,17 @@ def main():
     q = Player(10, 100, 100)
     q.image = p.image
 
-    s = Spider(10, 300, 300, 120)
+    s = Spider(10, 250, 50, 70)
     s.blocks.add(t.impassable)
     s.world_size = world_size
     s.rect = s.image.get_rect()
 
-    b = Bee(10, 400, 400, 120)
+    b = Bee(10, 200, 100, 120)
     b.blocks.add(t.impassable)
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    a = Ant(10, 500, 300, 120)
+    a = Ant(10, 100, 200, 120)
     a.blocks.add(t.impassable)
     a.world_size = world_size
     a.rect = a.image.get_rect()
@@ -85,7 +81,6 @@ def main():
 
     e.collisions[p] = (q, p.ouch) 
     pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
-<<<<<<< HEAD:examples/game.py
     pygame.time.set_timer(pygame.USEREVENT + 2, 150 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 4, 500 // league.Settings.gameTimeFactor)
@@ -94,14 +89,12 @@ def main():
     e.key_events[pygame.K_d] = p.move_right
     e.key_events[pygame.K_w] = p.move_up
     e.key_events[pygame.K_s] = p.move_down
-=======
     e.add_key(pygame.K_a, p.move_left)
     e.add_key(pygame.K_d, p.move_right)
     e.add_key(pygame.K_w, p.move_up)
     e.add_key(pygame.K_s, p.move_down)
     e.add_key(pygame.K_b, p.climb_on)
     e.add_key(pygame.K_SPACE, p.climb_off)
->>>>>>> master:game/game.py
     e.events[pygame.USEREVENT + 1] = q.move_right
     e.events[pygame.USEREVENT + 2] = s.move
     e.events[pygame.USEREVENT + 3] = b.move
