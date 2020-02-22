@@ -44,7 +44,7 @@ def main():
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    a = Leafbug(10, 100, 200, 120)
+    a = Leafbug(10, 100, 50, 70)
     a.blocks.add(t.impassable)
     a.world_size = world_size
     a.rect = a.image.get_rect()
@@ -72,7 +72,7 @@ def main():
 
     e.collisions[p] = (q, p.ouch) 
     pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
-    pygame.time.set_timer(pygame.USEREVENT + 2, 150 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 2, 125 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 4, 100 // league.Settings.gameTimeFactor)
 
