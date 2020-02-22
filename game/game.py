@@ -11,6 +11,7 @@ from enemies.bee import Bee
 from enemies.leafbug import Leafbug
 from enemies.acorn import Acorn
 from components.overlay import Overlay
+from components.win_overlay import Win_Overlay
 
 def main():
     e = league.Engine("Go Nutts!")
@@ -45,10 +46,11 @@ def main():
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    ac = Acorn(10, 150, 100)
+    ac = Acorn(10, 500, 100)
     ac.blocks.add(t.impassable)
     ac.world_size = world_size
     ac.rect = ac.image.get_rect()
+    w = Win_Overlay(p)
 
     l = Leafbug(10, 50, 100, 70)
     l.blocks.add(t.impassable)
@@ -69,6 +71,7 @@ def main():
     e.drawables.add(l)
     e.drawables.add(ac)
     e.drawables.add(o)
+    e.drawables.add(w)
     e.drawables.add(bu)
 
     c = league.LessDumbCamera(800, 600, p, e.drawables, world_size)
@@ -76,9 +79,11 @@ def main():
     
     e.objects.append(c)
     e.objects.append(o)
+    e.objects.append(w)
     e.objects.append(bu)
 
-    e.collisions[p] = (q, p.ouch) 
+    e.collisions[(p, p.ouch)] = [q,b,s,l]
+    e.collisions[(p, p.win)] = [ac]
     pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 2, 125 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
