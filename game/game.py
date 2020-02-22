@@ -45,14 +45,14 @@ def main():
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    a = Leafbug(10, 100, 200, 120)
     ac = Acorn(10, 150, 100)
     ac.blocks.add(t.impassable)
     ac.world_size = world_size
     ac.rect = ac.image.get_rect()
 
-    a = Ant(10, 100, 200, 120)
 
+
+    a = Leafbug(10, 100, 200, 120)
     a.blocks.add(t.impassable)
     a.world_size = world_size
     a.rect = a.image.get_rect()
