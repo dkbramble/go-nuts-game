@@ -54,10 +54,15 @@ def main():
     pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
     e.add_key(pygame.K_a, p.move_left)
     e.add_key(pygame.K_d, p.move_right)
+
     e.add_key(pygame.K_w, p.move_up)
+
     e.add_key(pygame.K_s, p.move_down)
     e.add_key(pygame.K_b, p.climb_on)
     e.add_key(pygame.K_SPACE, p.climb_off)
+
+    e.add_key(pygame.K_COMMA, p.reset_position)
+
     e.events[pygame.USEREVENT + 1] = q.move_right
     e.events[pygame.QUIT] = e.stop
     e.run()

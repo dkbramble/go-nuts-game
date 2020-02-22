@@ -15,6 +15,22 @@ class Player(Character):
         self.health = 100
         self.climb = False
         self.climb_direction = 0
+
+        # Being in the state of jumping will:
+        # alter our y-position up or down depending on trajectory, 
+        # Turn climbing off to enable jumping from climb, 
+        # 
+        self.jumping = False
+        # Are we in the upward or downward trajectory.
+        self.jumping_direction = 1
+        #number of units to jump up to before falling.
+        self.jump_height = 100
+        
+        # Initial x and y to reset the player position to.  
+        # Debug purposes.
+        self.xI = x
+        self.yI = y
+
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
@@ -46,6 +62,12 @@ class Player(Character):
         # Overlay
         self.font = pygame.font.Font('freesansbold.ttf',32)
         self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
+
+    def reset_position(self, time):
+        self.x = self.xI
+        self.y = self.yI
+
+
 
     def move_left(self, time):
         if not self.climb:
@@ -107,8 +129,11 @@ class Player(Character):
 
     def move_down(self, time):
         amount = self.delta * time
-        s = SoundManager()
-        s.play_sound('oh.wav')
+        # s = SoundManager()
+        # s.play_sound('oh.wav')
+        if not self.climb:
+            return
+        
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
@@ -160,6 +185,13 @@ class Player(Character):
 
     def climb_off(self, time):
         self.climb = False
+
+
+    def jump(self, time):
+        self.jumping = True
+        self.climbOff(time)
+        amount = self.delta * time * direction
+
 
     def update(self, time):
         self.rect.x = self.x
