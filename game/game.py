@@ -9,6 +9,7 @@ from player import Player
 from enemies.spider import Spider
 from enemies.bee import Bee
 from enemies.leafbug import Leafbug
+from enemies.acorn import Acorn
 from components.overlay import Overlay
 
 def main():
@@ -44,7 +45,14 @@ def main():
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    a = Leafbug(10, 100, 50, 70)
+    a = Leafbug(10, 100, 200, 120)
+    ac = Acorn(10, 150, 100)
+    ac.blocks.add(t.impassable)
+    ac.world_size = world_size
+    ac.rect = ac.image.get_rect()
+
+    a = Ant(10, 100, 200, 120)
+
     a.blocks.add(t.impassable)
     a.world_size = world_size
     a.rect = a.image.get_rect()
@@ -54,12 +62,14 @@ def main():
     e.objects.append(s)
     e.objects.append(b)
     e.objects.append(a)
+    e.objects.append(ac)
 
     e.drawables.add(p)
     e.drawables.add(q)
     e.drawables.add(s)
     e.drawables.add(b)
     e.drawables.add(a)
+    e.drawables.add(ac)
     e.drawables.add(o)
     e.drawables.add(bu)
 
