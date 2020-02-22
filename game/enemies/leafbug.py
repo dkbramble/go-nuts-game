@@ -1,19 +1,14 @@
 from league import *
 from components import *
-from league import *
 import pygame
 import sys
 sys.path.append('..')
 import league
 
-class Bee(Character):
-    """This is a sample class for a player object.  A player
-    is a character, is a drawable, and an updateable object.
-    This class should handle everything a player does, such as
-    moving, throwing/shooting, collisions, etc.  It was hastily
-    written as a demo but should direction.
-    """
-    def __init__(self, z=0, x=0, y=0, motion_range=100, motion_shape="I"):
+
+class Leafbug(Character):
+
+    def __init__(self, z=0, x=0, y=0, motion_range=100):
         super().__init__(z, x, y)
         # Where the player is positioned
         self.x = x
@@ -26,17 +21,17 @@ class Bee(Character):
         self.h_direction = Direction.WEST
         self.v_direction = Direction.NORTH
 
-        self.delta = 350
+        self.delta = 256
         # The image to use.  This will change frequently
         # in an animated Player class.
+
         self.image_num = 0
         self.images = {}
         temp = 0
         right = []
         left = []
-        for filename in sorted(os.listdir("./enemies/bee/")):
-            print(filename)
-            tmp = pygame.image.load('./enemies/bee/' + filename).convert_alpha()
+        for filename in sorted(os.listdir("./enemies/leafbug/")):
+            tmp = pygame.image.load('./enemies/leafbug/' + filename).convert_alpha()
             tmp = pygame.transform.scale(tmp, (64, 64))
             right.append(tmp)
             left.append(pygame.transform.flip(tmp, True, False))
@@ -44,6 +39,9 @@ class Bee(Character):
         self.images[Direction.WEST] = left
         # self.images = pygame.image.load('../enemies/bee/bee-0.png').convert_alpha()
         self.image = self.images[self.h_direction][0]
+        # self.image = self.sp.image
+        # self.image = pygame.image.load('../assets/ant.png').convert_alpha()
+        # self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
         self.world_size = (Settings.width, Settings.height)
@@ -60,10 +58,10 @@ class Bee(Character):
     def update_image(self):
         self.image = self.images[self.h_direction][self.image_num]
 
-        if self.image_num == 10:
-        	self.image_num = 0
+        if self.image_num == 5:
+            self.image_num = 0
         else:
-        	self.image_num += 1 
+            self.image_num += 1 
 
     def move(self, time):
         self.collisions = []

@@ -8,17 +8,8 @@ from components import *
 from player import Player
 from enemies.spider import Spider
 from enemies.bee import Bee
-from enemies.ant import Ant
+from enemies.leafbug import Leafbug
 from components.overlay import Overlay
-
-
-"""This file is garbage. It was a hastily coded mockup
-to demonstrate how to use the engine.  We will be creating
-a Game class that organizes this code better (and is
-reusable).
-"""
-
-# Function to call when colliding with zombie
 
 def main():
     e = league.Engine("Go Nutts!")
@@ -53,7 +44,7 @@ def main():
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    a = Ant(10, 100, 200, 120)
+    a = Leafbug(10, 100, 50, 70)
     a.blocks.add(t.impassable)
     a.world_size = world_size
     a.rect = a.image.get_rect()
@@ -81,9 +72,9 @@ def main():
 
     e.collisions[p] = (q, p.ouch) 
     pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
-    pygame.time.set_timer(pygame.USEREVENT + 2, 150 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 2, 125 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
-    pygame.time.set_timer(pygame.USEREVENT + 4, 500 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 4, 100 // league.Settings.gameTimeFactor)
 
     e.key_events[pygame.K_a] = p.move_left
     e.key_events[pygame.K_d] = p.move_right

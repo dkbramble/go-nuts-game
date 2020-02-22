@@ -22,9 +22,9 @@ class Spider(Character):
         # Range of motion spider will have
         self.motion_range = motion_range
         # Tracks state of direction. D - Down. U - Up
-        self.direction = "D"
+        self.direction = Direction.SOUTH
 
-        self.delta = 512
+        self.delta = 400
         # The image to use.  This will change frequently
         # in an animated Player class.
         self.sprites = league.Spritesheet("./enemies/LPC_Spiders/spider01.png", league.Settings.tile_size/2, 10)
@@ -64,31 +64,37 @@ class Spider(Character):
         try:
             if self.y + amount > self.world_size[0] - Settings.tile_size:
                 raise OffScreenTopException
-            elif self.direction == "D":
+            elif self.direction == Direction.SOUTH:
                 self.y = self.y + amount
                 self.update(0)
                 while(len(self.collisions) != 0):
                     self.y = self.y - amount
                     self.update(0)
                 if self.y - self.origin_y >= self.motion_range:
-                    self.direction = "U"
-            elif self.direction == "U":
+                    self.direction = Direction.NORTH
+            elif self.direction == Direction.NORTH:
                 self.y = self.y - amount
                 self.update(0)
                 while(len(self.collisions) != 0):
                     self.y = self.y + amount
                     self.update(0)
                 if  self.y - self.origin_y <= 0:
-                    self.direction = "D"
+                    self.direction = Direction.SOUTH
         except:
             pass
 
     def update_image(self):
         self.image = self.images[self.image_num]
-        if self.image_num == 5:
-            self.image_num = 0
+        if self.direction == Direction.NORTH:
+            if self.image_num == 5:
+                self.image_num = 0
+            else:
+                self.image_num += 1 
         else:
-            self.image_num += 1 
+            if self.image_num == 0:
+                self.image_num = 5
+            else:
+                self.image_num -= 1 
 
     def update(self, time):
         self.rect.x = self.x
