@@ -146,8 +146,6 @@ class Engine:
     # to be called per event.
     def handle_inputs(self):
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                print("MOUSE")
             # Check "normal" events
             if event.type in self.events.keys():
                 self.events[event.type](self.game_delta_time)

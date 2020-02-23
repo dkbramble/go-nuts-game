@@ -78,7 +78,7 @@ def main():
     e.objects.append(w)
     e.objects.append(bu)
 
-    e.collisions[(p, p.ouch)] = [q,b,s,l]
+    e.collisions[(p, p.ouch)] = [b,s,l]
     e.collisions[(p, p.win)] = [ac]
     pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 2, 125 // league.Settings.gameTimeFactor)

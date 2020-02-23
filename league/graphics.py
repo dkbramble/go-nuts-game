@@ -34,12 +34,8 @@ class DumbCamera(Camera):
 
 class LessDumbCamera(Camera):
     def update(self, time):
-        # print("Self x")
-        # print(self.x)
-        # print("Self y")
-        # print(self.y)
         
-        if self.center_on.x - self.width // 2 > 0 and self.center_on.x + self.width // 2 < self.world_size[0] - Settings.tile_size:
+        if self.center_on.x + 50 - self.width // 2 > 0 and self.center_on.x + 50 + self.width // 2 < self.world_size[0] - Settings.tile_size:
             self.x = self.center_on.x + 50
         if self.center_on.y - self.height // 2 > 0 and self.center_on.y + self.height // 2 < self.world_size[1] - Settings.tile_size:
             self.y = self.center_on.y + 100
