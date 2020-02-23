@@ -33,9 +33,10 @@ class MusicButton(league.DUGameObject):
         mouse = pygame.mouse.get_pos()
         if 800 > mouse[0] > 699 and 40 > mouse[1] > 0:
             s = SoundManager()
-            s.bgm_control() 
-            if self.music == "On":
+            play = s.bgm_control() 
+            if play == False:
                 self.music = "Off"
             else:
                 self.music = "On"
+    
             
