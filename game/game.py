@@ -168,6 +168,7 @@ def main():
         e.objects.append(c)
         e.objects.append(o)
         e.objects.append(w)
+        e.objects.append(bu)
 
         e.drawables.add(quL)
         e.drawables.add(resetL)
