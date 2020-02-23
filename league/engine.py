@@ -108,8 +108,9 @@ class Engine:
     # tuple.
     def check_collisions(self):
         for i in self.collisions.keys():
-            if pygame.sprite.collide_rect(i, self.collisions[i][0]):
-                self.collisions[i][1]()
+            for obj in self.collisions[i]:
+                if pygame.sprite.collide_rect(i[0], obj):
+                    i[1]()
 
     def add_group(self, group):
         self.drawables.add(group.sprites())

@@ -2,8 +2,6 @@ from league import *
 from components import *
 import pygame
 import sys
-sys.path.append('..')
-import league
 
 class Spider(Character):
     """This is a sample class for a player object.  A player
@@ -27,7 +25,7 @@ class Spider(Character):
         self.delta = 400
         # The image to use.  This will change frequently
         # in an animated Player class.
-        self.sprites = league.Spritesheet("./enemies/LPC_Spiders/spider01.png", league.Settings.tile_size/2, 10)
+        self.sprites = Spritesheet("./enemies/LPC_Spiders/spider01.png", Settings.tile_size/2, 10)
         self.sp = self.sprites.sprites[2]
         self.image_num = 0
         self.image = self.sp.image

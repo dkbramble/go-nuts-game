@@ -16,6 +16,7 @@ class Player(Character):
         self.health = 100
         self.climb = False
         self.climb_direction = 0
+        self.got_acorn = False
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
@@ -180,3 +181,8 @@ class Player(Character):
             s.play_sound(random.choice(oucies_soundies))
             self.health = self.health - 10
             self.last_hit = now
+
+    def win(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_hit > 1000:
+            self.got_acorn = True
