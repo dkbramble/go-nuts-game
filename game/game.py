@@ -25,7 +25,7 @@ def main():
     e.drawables.add(t.passable.sprites())
     m = SoundManager()
     m.bgm_start('Song_For_Someone.wav')
-    p = Player(2, 400, 200)
+    p = Player(2, 400, 100)
     o = Overlay(p)
     bu = MusicButton()
     p.blocks.add(t.impassable)
@@ -73,7 +73,7 @@ def main():
     e.drawables.add(o)
     e.drawables.add(bu)
 
-    c = league.LessDumbCamera(800, 600, p, e.drawables, world_size)
+    c = league.LessDumbCamera(800, 400, p, e.drawables, world_size)
     #c = league.DumbCamera(800, 600, p, e.drawables, world_size)
     
     e.objects.append(c)

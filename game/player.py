@@ -45,10 +45,15 @@ class Player(Character):
         # Where the player is positioned
         self.x = x
         self.y = y
+        self.state = State.IDLE
         # The image to use.  This will change frequently
         # in an animated Player class.
         self.image = pygame.image.load('../assets/zombie.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (64, 64))
+        self.images = self.load_images()
+        self.image_num = 0
+        self.image_delay = 0
+        self.image = self.images[self.state][0]
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
         self.world_size = (Settings.width, Settings.height)
@@ -70,6 +75,17 @@ class Player(Character):
         self.font = pygame.font.Font('freesansbold.ttf',32)
         self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
 
+    def load_images(self):
+        images = {
+            State.IDLE: []
+        }
+        sprites = Spritesheet("../assets/nutthaniel/sprMidiP.png", Settings.tile_size/4, 16)
+        for i in range(1,5):
+            tmp = sprites.sprites[i].image
+            tmp = pygame.transform.scale(tmp, (64, 64))
+            images[State.IDLE].append(tmp)
+        return images
+
     def reset_position(self, time):
         self.x = self.xI
         self.y = self.yI
@@ -77,6 +93,7 @@ class Player(Character):
 
 
     def move_left(self, time):
+        self.update_image(time)
         if not self.climb:
             amount = self.delta * time
             try:
@@ -92,6 +109,7 @@ class Player(Character):
                 pass
 
     def move_right(self, time):
+        self.update_image(time)
         if not self.climb:
             amount = self.delta * time
             try:
@@ -108,11 +126,11 @@ class Player(Character):
 
     def jump(self, time):  
         
+        if not self.jumping:
+            self.jump_delta = 0
+            self.jump_start = self.y
         self.jumping = True
         self.climb_off(time)
-
-        self.jump_delta = 0
-        self.jump_start = self.y
 
     def lerpY(self, time, t):
         terminus = self.jump_start - self.jump_height
@@ -122,6 +140,7 @@ class Player(Character):
         return vI + delta * (vF - vI)
 
     def move_up(self, time):
+        self.update_image(time)
         self.collisions = []
         amount = self.delta * time
         try:
@@ -135,6 +154,7 @@ class Player(Character):
                 self.update(0)
                 if len(self.collisions) != 0:
                     self.y = self.y + amount
+                    self.jumping = False
                     self.update(0)
                     self.collisions = []
             if self.climb:
@@ -161,6 +181,7 @@ class Player(Character):
 
     def move_down(self, time):
         amount = self.gravity * time
+        self.update_image(time)
         
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
@@ -215,8 +236,16 @@ class Player(Character):
     def climb_off(self, time):
         self.climb = False
 
+    def update_image(self, time):
+        self.image = self.images[self.state][self.image_num]
+        now = pygame.time.get_ticks()
+        if now - self.image_delay > 75:
+            if self.image_num == 3:
+                self.image_num = 0
+            else:
+                self.image_num +=1
+            self.image_delay = now
 
-    
     def update(self, time):
         self.rect.x = self.x
         self.rect.y = self.y
