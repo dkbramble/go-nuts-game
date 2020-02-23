@@ -12,6 +12,7 @@ from enemies.leafbug import Leafbug
 from enemies.acorn import Acorn
 from components.overlay import Overlay
 
+
 def main():
     e = league.Engine("Go Nutts!")
     e.init_pygame()
@@ -25,15 +26,12 @@ def main():
     e.drawables.add(t.passable.sprites())
     m = SoundManager()
     m.bgm_start('Song_For_Someone.wav')
-    p = Player(2, 400, 200)
+    p = Player(2, 420, 180)
     o = Overlay(p)
     bu = MusicButton()
     p.blocks.add(t.impassable)
     p.world_size = world_size
     p.rect = p.image.get_rect()
-
-    q = Player(10, 100, 100)
-    q.image = p.image
 
     s = Spider(10, 250, 50, 70)
     s.blocks.add(t.impassable)
@@ -58,14 +56,12 @@ def main():
     a.rect = a.image.get_rect()
 
     e.objects.append(p)
-    e.objects.append(q)
     e.objects.append(s)
     e.objects.append(b)
     e.objects.append(a)
     e.objects.append(ac)
 
     e.drawables.add(p)
-    e.drawables.add(q)
     e.drawables.add(s)
     e.drawables.add(b)
     e.drawables.add(a)
@@ -73,30 +69,24 @@ def main():
     e.drawables.add(o)
     e.drawables.add(bu)
 
-    c = league.LessDumbCamera(800, 600, p, e.drawables, world_size)
+    c = league.LessDumbCamera(800, 400, p, e.drawables, world_size)
     #c = league.DumbCamera(800, 600, p, e.drawables, world_size)
     
     e.objects.append(c)
     e.objects.append(o)
     e.objects.append(bu)
-
-    e.collisions[p] = (q, p.ouch) 
     pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 2, 125 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 4, 100 // league.Settings.gameTimeFactor)
 
-    e.key_events[pygame.K_a] = p.move_left
-    e.key_events[pygame.K_d] = p.move_right
-    e.key_events[pygame.K_w] = p.move_up
-    e.key_events[pygame.K_s] = p.move_down
     e.add_key(pygame.K_a, p.move_left)
     e.add_key(pygame.K_d, p.move_right)
     e.add_key(pygame.K_w, p.move_up)
     e.add_key(pygame.K_s, p.move_down)
     e.add_key(pygame.K_b, p.climb_on)
     e.add_key(pygame.K_SPACE, p.climb_off)
-    e.events[pygame.USEREVENT + 1] = q.move_right
+    e.events[pygame.MOUSEBUTTONDOWN] = bu.mouse_click
     e.events[pygame.USEREVENT + 2] = s.move
     e.events[pygame.USEREVENT + 3] = b.move
     e.events[pygame.USEREVENT + 4] = a.move
