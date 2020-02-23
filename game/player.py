@@ -14,20 +14,51 @@ class Player(Character):
         super().__init__(z, x, y)
         # This unit's health
         self.health = 100
+
+        #states   
         self.climb = False
+        self.jumping = False
+
         self.climb_direction = 0
+        
+        #movement constants
+        self.jump_height = 100
+        #defines how far along in the jump we are 0->1
+        self.jump_delta = 0
+        self.jump_start = self.y
+
+        self.move_speed = 512
+        self.gravity = 200
+        
+        self.h_direction = Direction.EAST
+
+        self.state_switch_time = 0
+        
+        # Initial x and y to reset the player position to.  
+        # Debug purposes.
+        self.xI = x
+        self.yI = y
+
         self.got_acorn = False
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
-        self.delta = 512
+        self.delta = 400
         # Where the player is positioned
         self.x = x
         self.y = y
+        self.state = State.IDLE
         # The image to use.  This will change frequently
         # in an animated Player class.
-        self.image = pygame.image.load('../assets/zombie.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (64, 64))
+        self.images = self.load_images()
+        self.image_num = 0
+        self.image_delay = 0
+        self.image = self.images[self.state][self.h_direction][0]
+        self.animation_delays = {
+            State.JUMP: 150,
+            State.RUN: 75,
+            State.IDLE: 75
+        }
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
         self.world_size = (Settings.width, Settings.height)
@@ -48,7 +79,56 @@ class Player(Character):
         # Overlay
         self.font = pygame.font.Font('freesansbold.ttf',32)
 
+    def load_images(self):
+        for enum in State:
+            print(enum)
+        images = {
+            State.IDLE: {
+                Direction.EAST: [],
+                Direction.WEST: []
+            },
+            State.RUN: {
+                Direction.EAST: [],
+                Direction.WEST: []
+            },
+            State.JUMP: {
+                Direction.EAST: [],
+                Direction.WEST: []
+            }
+        }
+        sprites = Spritesheet("../assets/nutthaniel/sprMidiP.png", Settings.tile_size/4, 16)
+        for i in range(1,5):
+            tmp = sprites.sprites[i].image
+            tmp = pygame.transform.scale(tmp, (64, 64))
+            images[State.IDLE][Direction.EAST].append(tmp)
+            images[State.IDLE][Direction.WEST].append(pygame.transform.flip(tmp, True, False))
+        for i in range(0,11):
+            tmp = sprites.sprites[i+33].image
+            tmp = pygame.transform.scale(tmp, (64, 64))
+            images[State.RUN][Direction.EAST].append(tmp)
+            images[State.RUN][Direction.WEST].append(pygame.transform.flip(tmp, True, False))
+        for i in range(0,5):
+            tmp = sprites.sprites[i+9].image
+            tmp = pygame.transform.scale(tmp, (64, 64))
+            images[State.JUMP][Direction.EAST].append(tmp)
+            images[State.JUMP][Direction.WEST].append(pygame.transform.flip(tmp, True, False))
+        return images
+
+    def reset_position(self, time):
+        self.x = self.xI
+        self.y = self.yI
+
+    def change_state(self, next_state):
+        if self.state != next_state and not self.jumping:
+            self.state = next_state
+            self.image_num = 0
+        self.state_switch_time = pygame.time.get_ticks()
+
+
     def move_left(self, time):
+        self.update_image(time)
+        self.change_state(State.RUN)
+        self.h_direction = Direction.WEST
         if not self.climb:
             amount = self.delta * time
             try:
@@ -64,6 +144,9 @@ class Player(Character):
                 pass
 
     def move_right(self, time):
+        self.update_image(time)
+        self.change_state(State.RUN)
+        self.h_direction = Direction.EAST
         if not self.climb:
             amount = self.delta * time
             try:
@@ -78,19 +161,54 @@ class Player(Character):
             except:
                 pass
 
+    def reset_idle(self):
+        if pygame.time.get_ticks() - self.state_switch_time > 100:
+            self.change_state(State.IDLE)
+
+
+    def jump(self, time):  
+        
+        if not self.jumping:
+            self.jump_delta = 0
+            self.jump_start = self.y
+        self.change_state(State.JUMP)
+        self.jumping = True
+        self.climb_off(time)
+
+    def update_jump(self, time):
+        if self.jumping:
+            if (self.jump_delta >= 1) or (self.y < self.y-self.jump_height):
+                self.falling = True
+                return
+            self.jump_delta = self.jump_delta + .1
+            print(self.jump_delta)
+            if not self.falling:
+                self.move_up(time)
+            self.update(0)
+
+    def lerpY(self, time, t):
+        terminus = self.jump_start - self.jump_height
+        return self.lerp(self.jump_start, terminus, t)
+
+    def lerp(self, vI, vF, delta):
+        return vI + delta * (vF - vI)
+
     def move_up(self, time):
+        self.update_image(time)
         self.collisions = []
         amount = self.delta * time
-        # s = SoundManager()
-        # s.play_sound('thanks.wav')
         try:
             if self.y - amount < 0:
                 raise OffScreenTopException
             else:
-                self.y = self.y - amount
+                if self.jumping :
+                    self.y = self.lerpY(time, self.jump_delta)
+                else:
+                    self.y = self.y - amount
                 self.update(0)
                 if len(self.collisions) != 0:
                     self.y = self.y + amount
+                    self.falling = True
                     self.update(0)
                     self.collisions = []
             if self.climb:
@@ -105,11 +223,10 @@ class Player(Character):
         except: 
             pass
 
-
     def move_down(self, time):
-        amount = self.delta * time
-        # s = SoundManager()
-        # s.play_sound('oh.wav')
+        amount = self.gravity * time
+        self.update_image(time)
+        
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
@@ -119,6 +236,8 @@ class Player(Character):
                 if len(self.collisions) != 0:
                     self.y = self.y - amount
                     self.update(0)
+                    self.jumping = False
+                    self.falling = False
                     self.collisions = []
             if self.climb:
                 amount = self.delta * time * self.climb_direction
@@ -162,6 +281,18 @@ class Player(Character):
     def climb_off(self, time):
         self.climb = False
 
+    def update_image(self, time):
+        self.image = self.images[self.state][self.h_direction][self.image_num]
+        now = pygame.time.get_ticks()
+        if self.state == State.JUMP and self.image_num == len(self.images[self.state][self.h_direction])-1:
+            self.image_num -= 1
+            self.image_delay = now
+        elif now - self.image_delay > self.animation_delays[self.state]:
+            if self.image_num == len(self.images[self.state][self.h_direction])-1:
+                self.image_num = 0
+            else:
+                self.image_num +=1
+            self.image_delay = now
     def print_place(self, time):
         print(str(self.x) + "   " + str(self.y))
 
@@ -169,11 +300,13 @@ class Player(Character):
         self.rect.x = self.x
         self.rect.y = self.y
         self.collisions = []
+        
         for sprite in self.blocks:
             self.collider.rect.x= sprite.x
             self.collider.rect.y = sprite.y
             if pygame.sprite.collide_rect(self, self.collider):
                 self.collisions.append(sprite)
+        self.reset_idle()
 
     def ouch(self):
         now = pygame.time.get_ticks()

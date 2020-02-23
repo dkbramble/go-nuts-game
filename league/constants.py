@@ -6,8 +6,8 @@ class State(IntEnum):
     IDLE = 0
     RUN = 1
     ATTACK = 2
-    THROW = 3
-    
+    JUMP = 3
+
 from enum import IntEnum
 class Direction(IntEnum):
     """Direction is an enumeration of the cardinal directions.
