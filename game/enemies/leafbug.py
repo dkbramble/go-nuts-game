@@ -35,7 +35,7 @@ class Leafbug(Character):
             "h": [Direction.EAST, Direction.WEST],
             "v": [Direction.SOUTH, Direction.NORTH],
             "L": [Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTH],
-            "fL": [Direction.NORTH, Direction.WEST, Direction.EAST, Direction.SOUTH],
+            "fL": [Direction.EAST, Direction.SOUTH, Direction.NORTH, Direction.WEST],
             "s": [Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH]
         }
         self.move_order = movement_orders[motion_type]
