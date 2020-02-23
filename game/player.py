@@ -13,7 +13,7 @@ class Player(Character):
     def __init__(self, z=0, x=0, y=0):
         super().__init__(z, x, y)
         # This unit's health
-        self.health = 100
+        self.health = 10
         self.climb = False
         self.climb_direction = 0
         self.got_acorn = False
@@ -47,7 +47,6 @@ class Player(Character):
         self.collider.rect = self.collider.image.get_rect()
         # Overlay
         self.font = pygame.font.Font('freesansbold.ttf',32)
-        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
 
     def move_left(self, time):
         if not self.climb:
@@ -180,6 +179,8 @@ class Player(Character):
             oucies_soundies = ['ow_1.wav','ow_2.wav','op.wav']
             s.play_sound(random.choice(oucies_soundies))
             self.health = self.health - 10
+            if self.health < 0:
+                self.health = 0
             self.last_hit = now
 
     def win(self):

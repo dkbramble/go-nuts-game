@@ -12,6 +12,8 @@ from enemies.leafbug import Leafbug
 from enemies.acorn import Acorn
 from components.overlay import Overlay
 from components.win_overlay import Win_Overlay
+from components.lose_overlay import Lose_Overlay
+from components.overlay import Overlay_Button
 
 
 def main():
@@ -52,25 +54,34 @@ def main():
     ac.world_size = world_size
     ac.rect = ac.image.get_rect()
     w = Win_Overlay(p)
+    reset = Overlay_Button(200,250, False, "            Reset", (209, 45, 25), (0,0,0), (255,255,255))
+    qu = Overlay_Button(375,250, False, "         Quit", (209, 45, 25), (0,0,0), (255,255,255))
+    lose = Lose_Overlay(p, reset, qu)
 
     l = Leafbug(10, 50, 100, 70)
     l.blocks.add(t.impassable)
     l.world_size = world_size
     l.rect = l.image.get_rect()
 
+
     e.objects.append(p)
     e.objects.append(s)
     e.objects.append(b)
     e.objects.append(l)
+    e.objects.append(reset)
+    e.objects.append(qu)
     e.objects.append(ac)
 
     e.drawables.add(p)
     e.drawables.add(s)
     e.drawables.add(b)
     e.drawables.add(l)
+    e.drawables.add(qu)
+    e.drawables.add(reset)
     e.drawables.add(ac)
     e.drawables.add(o)
     e.drawables.add(w)
+    e.drawables.add(lose)
     e.drawables.add(bu)
 
     c = league.LessDumbCamera(800, 400, p, e.drawables, world_size)
@@ -79,6 +90,7 @@ def main():
     e.objects.append(c)
     e.objects.append(o)
     e.objects.append(w)
+    e.objects.append(lose)
     e.objects.append(bu)
 
     e.collisions[(p, p.ouch)] = [b,s,l]
@@ -94,7 +106,8 @@ def main():
     e.add_key(pygame.K_s, p.move_down)
     e.add_key(pygame.K_b, p.climb_on)
     e.add_key(pygame.K_SPACE, p.climb_off)
-    e.events[pygame.MOUSEBUTTONDOWN] = bu.mouse_click
+    e.events[pygame.MOUSEBUTTONDOWN + 1] = bu.mouse_click
+    e.events[pygame.MOUSEBUTTONDOWN] = lose.button_click
     e.events[pygame.USEREVENT + 2] = s.move
     e.events[pygame.USEREVENT + 3] = b.move
     e.events[pygame.USEREVENT + 4] = l.move

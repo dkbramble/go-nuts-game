@@ -26,8 +26,12 @@ class SoundManager():
         else:
             pygame.mixer.music.unpause()   
             playing = True
+        return playing
 
     def play_sound(self, file):
         file_path = self.sound_path + file
         sound = pygame.mixer.Sound(file_path)
         sound.play()
+    
+    def get_playing(self):
+        return playing
