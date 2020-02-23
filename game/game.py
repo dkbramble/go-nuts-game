@@ -163,6 +163,8 @@ def main():
         e.objects.append(qu)
         e.objects.append(lose)
         e.objects.append(c)
+        e.objects.append(o)
+        e.objects.append(w)
 
         e.drawables.add(qu)
         e.drawables.add(reset)
