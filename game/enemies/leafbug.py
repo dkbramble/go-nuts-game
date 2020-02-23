@@ -2,9 +2,6 @@ from league import *
 from components import *
 import pygame
 import sys
-sys.path.append('..')
-import league
-
 
 class Leafbug(Character):
 

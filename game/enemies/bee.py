@@ -1,18 +1,10 @@
 from league import *
 from components import *
-from league import *
 import pygame
 import sys
-sys.path.append('..')
-import league
 
 class Bee(Character):
-    """This is a sample class for a player object.  A player
-    is a character, is a drawable, and an updateable object.
-    This class should handle everything a player does, such as
-    moving, throwing/shooting, collisions, etc.  It was hastily
-    written as a demo but should direction.
-    """
+
     def __init__(self, z=0, x=0, y=0, motion_range=100, motion_shape="I"):
         super().__init__(z, x, y)
         # Where the player is positioned
@@ -35,7 +27,6 @@ class Bee(Character):
         right = []
         left = []
         for filename in sorted(os.listdir("./enemies/bee/")):
-            print(filename)
             tmp = pygame.image.load('./enemies/bee/' + filename).convert_alpha()
             tmp = pygame.transform.scale(tmp, (64, 64))
             right.append(tmp)
