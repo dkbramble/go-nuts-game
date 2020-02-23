@@ -7,7 +7,7 @@ class Win_Overlay(league.DUGameObject):
         self._layer = 1001
         self.player = player
         self.font = pygame.font.Font('freesansbold.ttf',64)
-        self.image = pygame.Surface([350, 150])
+        self.image = pygame.Surface([350, 150], pygame.SRCALPHA)
         self.rect = self.image.get_rect()
         self.x = 200
         self.y = 100
