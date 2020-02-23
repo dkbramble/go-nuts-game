@@ -44,6 +44,7 @@ class Engine:
         self.visible_statistics = False
         self.statistics_font = None
         self.collisions = {}
+        self.reset = False
 
     def init_pygame(self):
         """This function sets up the state of the pygame system,
@@ -137,6 +138,11 @@ class Engine:
     def stop(self, time):
         self.running = False
 
+    # Restart the engine
+    def restart(self, time, res):
+        self.running = False
+        self.reset = res
+
     # Shutdown pygame
     def end(self, time):
         pygame.quit()
@@ -149,6 +155,7 @@ class Engine:
             # Check "normal" events
             if event.type in self.events.keys():
                 self.events[event.type](self.game_delta_time)
+
         if pygame.key.get_pressed()[pygame.K_b] or pygame.key.get_pressed()[pygame.K_n]:
             pass
         elif pygame.key.get_pressed()[pygame.K_a]:
