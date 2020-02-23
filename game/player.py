@@ -18,7 +18,7 @@ class Player(Character):
         #states   
         self.climb = False
         self.jumping = False
-
+        self.falling = True
         self.climb_direction = 0
         
         #movement constants
