@@ -13,7 +13,7 @@ class Player(Character):
     def __init__(self, z=0, x=0, y=0):
         super().__init__(z, x, y)
         # This unit's health
-        self.health = 10
+        self.health = 100
         self.climb = False
         self.climb_direction = 0
         self.got_acorn = False
@@ -161,6 +161,9 @@ class Player(Character):
 
     def climb_off(self, time):
         self.climb = False
+
+    def print_place(self, time):
+        print(str(self.x) + "   " + str(self.y))
 
     def update(self, time):
         self.rect.x = self.x

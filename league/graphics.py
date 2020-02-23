@@ -153,7 +153,7 @@ class Spritesheet:
         # This function splits the sheet up into equal-sized chunks,
         # and returns a list of the chunks.
         sprites = []
-        for i in range((self.width * self.height) // (Settings.tile_size * Settings.tile_size)):
+        for i in range((self.width * self.height) // (self.tile_size * self.tile_size)):
                 image = self.__get_image_num(i)
                 sprites.append(image)
         return sprites
