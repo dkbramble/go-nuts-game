@@ -22,13 +22,13 @@ class Player(Character):
         self.climb_direction = 0
         
         #movement constants
-        self.jump_height = 100
+        self.jump_height = 150
         #defines how far along in the jump we are 0->1
         self.jump_delta = 0
         self.jump_start = self.y
 
         self.move_speed = 512
-        self.gravity = 200
+        self.gravity = 80
         
         self.h_direction = Direction.EAST
 
@@ -181,33 +181,38 @@ class Player(Character):
             s.play_sound(random.choice(idle_titles))
             self.state_switch_time = pygame.time.get_ticks()
 
+    """ One time called per jump sets the start point and some other default vals. """
     def jump(self, time):  
-        self.climb_off(time)
+        self.climb_off(time) # jumping stops the climb process.
 
         if not self.jumping:
-            self.jump_delta = 0
-            self.jump_start = self.y
+            self.jump_delta = 0 # 'time' = 0
+            self.jump_start = self.y #set begin point of jump
         self.change_state(State.JUMP)
         self.jumping = True
 
+    """ Called by main game loop and handles the logic for players jumping. """
     def update_jump(self, time):
-        if self.jumping:
-            if (self.jump_delta >= 1) or (self.y < self.y-self.jump_height):
-                self.falling = True
+        if self.jumping: #only executes if player is jumping.
+            if (self.jump_delta >= 1) or (self.y < self.y-self.jump_height): # if player is at peak of jump
+                self.falling = True 
                 return
-            self.jump_delta = self.jump_delta + .1
-            print(self.jump_delta)
+            self.jump_delta = self.jump_delta + .03 #otherwise increase the 'time' through the jump
             if not self.falling:
-                self.move_up(time)
+                self.move_up(time) #Move up by increment dependent on lerp.
             self.update(0)
 
+    """ just calls lerp with player's values. """
     def lerpY(self, time, t):
         terminus = self.jump_start - self.jump_height
         return self.lerp(self.jump_start, terminus, t)
 
+    """ Interpolate between two values.. """
     def lerp(self, vI, vF, delta):
         return vI + delta * (vF - vI)
 
+    """ Allows player to move up while climbing.
+    Also handles jump movement and is called to move the player upwards until they reach their peak. """
     def move_up(self, time):
         self.update_image(time)
         self.collisions = []
@@ -239,10 +244,9 @@ class Player(Character):
         except: 
             pass
 
+    """ Player can move down when climbing. """
     def move_down(self, time):
         amount = self.delta * time
-        # if self.climb:
-        #     amount = self.delta * time
         self.update_image(time)
         
         try:
@@ -274,6 +278,7 @@ class Player(Character):
         except:
             pass
 
+    """ Allows the player to fall downwards at a consistent rate."""
     def move_down_gravity(self, time):
         amount = self.gravity * time
         # if self.climb:
@@ -295,8 +300,9 @@ class Player(Character):
         except:
             pass
         
-    #Hold right/left to run into an impassible object and press 'k' to climb. climbing will restrict horizontal movement until either the 
-    #space bar is pressed or you reach the top or bottom of a the object.
+    """Hold right/left to run into an impassible object and press 'k' to climb. 
+    climbing will restrict horizontal movement until either the 
+    space bar is pressed or you reach the top or bottom of a the object."""
     def climb_on(self, time, direction):
         amount = self.delta * time * direction
         self.climb_direction = direction
@@ -322,6 +328,7 @@ class Player(Character):
         except:
             pass
 
+    """ Turns off 'climb mode' """
     def climb_off(self, time):
         self.climb = False
 

@@ -35,7 +35,7 @@ def main():
         ##e.drawables.add(d.passable.sprites())
         m = SoundManager()
         m.bgm_start('Song_For_Someone.wav')
-        p = Player(2, 420, 180)
+        p = Player(2, 420, 100)
         o = Overlay(p)
         bu = MusicButton()
         p.blocks.add(t.impassable)
@@ -194,8 +194,8 @@ def main():
         pygame.time.set_timer(pygame.USEREVENT + 22, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 23, 100 // league.Settings.gameTimeFactor)
         #Nutthaniel
-        pygame.time.set_timer(pygame.USEREVENT + 30, 20 // league.Settings.gameTimeFactor)
-        pygame.time.set_timer(pygame.USEREVENT + 31, 20 // league.Settings.gameTimeFactor)
+        pygame.time.set_timer(pygame.USEREVENT + 30, 10 // league.Settings.gameTimeFactor)
+        pygame.time.set_timer(pygame.USEREVENT + 31, 5 // league.Settings.gameTimeFactor)
 
         e.add_key(pygame.K_a, p.move_left)
         e.add_key(pygame.K_d, p.move_right)
