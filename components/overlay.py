@@ -55,9 +55,9 @@ class Overlay_Button(league.DUGameObject):
     def mouse_click(self):
         mouse = pygame.mouse.get_pos()
         if self.rect.x + 140 > mouse[0] > self.rect.x + 50 and 275 > mouse[1] > 245:
-            if self.tx == "            Reset":
+            if "Reset" in self.tx:
                 print("YO")
-            if self.tx == "         Quit":
+            if "Quit" in self.tx:
                 print("YOYO")
     def set_display(self, option):
         self.display = option
