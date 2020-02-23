@@ -57,8 +57,10 @@ class Player(Character):
         self.animation_delays = {
             State.JUMP: 150,
             State.RUN: 75,
-            State.IDLE: 75
+            State.IDLE: 75,
+            State.CLIMB: 220
         }
+        self.reverse_climb = False
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
         self.world_size = (Settings.width, Settings.height)
@@ -94,6 +96,10 @@ class Player(Character):
             State.JUMP: {
                 Direction.EAST: [],
                 Direction.WEST: []
+            },
+            State.CLIMB: {
+                Direction.EAST: [],
+                Direction.WEST: []
             }
         }
         sprites = Spritesheet("../assets/nutthaniel/sprMidiP.png", Settings.tile_size/4, 16)
@@ -112,6 +118,11 @@ class Player(Character):
             tmp = pygame.transform.scale(tmp, (64, 64))
             images[State.JUMP][Direction.EAST].append(tmp)
             images[State.JUMP][Direction.WEST].append(pygame.transform.flip(tmp, True, False))
+        for i in range(0,4):
+            tmp = sprites.sprites[i+72].image
+            tmp = pygame.transform.scale(tmp, (64, 64))
+            images[State.CLIMB][Direction.EAST].append(tmp)
+            images[State.CLIMB][Direction.WEST].append(tmp)
         return images
 
     def reset_position(self, time):
@@ -119,7 +130,7 @@ class Player(Character):
         self.y = self.yI
 
     def change_state(self, next_state):
-        if self.state != next_state and not self.jumping:
+        if self.state != next_state and not (self.jumping or self.climb):
             self.state = next_state
             self.image_num = 0
         self.state_switch_time = pygame.time.get_ticks()
@@ -304,10 +315,10 @@ class Player(Character):
                     self.update(0)
                 else:
                     self.climb = True
+                    self.state = State.CLIMB
                     while(len(self.collisions) != 0):
                         self.x = self.x - amount
                         self.update(0)
-
         except:
             pass
 
@@ -317,15 +328,28 @@ class Player(Character):
     def update_image(self, time):
         self.image = self.images[self.state][self.h_direction][self.image_num]
         now = pygame.time.get_ticks()
-        if self.state == State.JUMP and self.image_num == len(self.images[self.state][self.h_direction])-1:
-            self.image_num -= 1
+        images_size = len(self.images[self.state][self.h_direction])
+        if now - self.image_delay > self.animation_delays[self.state]:
+            if self.state == State.JUMP and self.image_num == images_size-1:
+                self.image_num -= 1
+                self.image_delay = now
+            elif self.state == State.CLIMB: 
+                if now - self.image_delay > self.animation_delays[self.state]:
+                    if self.image_num == images_size-1:
+                        self.reverse_climb = True
+                    elif self.image_num == 0:
+                        self.reverse_climb = False
+                    if self.reverse_climb:
+                        self.image_num -= 1
+                    else:
+                        self.image_num += 1
+            else: 
+                if self.image_num == images_size-1:
+                    self.image_num = 0
+                else:
+                    self.image_num +=1
             self.image_delay = now
-        elif now - self.image_delay > self.animation_delays[self.state]:
-            if self.image_num == len(self.images[self.state][self.h_direction])-1:
-                self.image_num = 0
-            else:
-                self.image_num +=1
-            self.image_delay = now
+
     def print_place(self, time):
         print(str(self.x) + "   " + str(self.y))
 
