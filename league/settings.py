@@ -34,9 +34,9 @@ class State(IntEnum):
     """State enumerates character states for readability.  Common states
     are predefined, add your own as needed."""
     IDLE = 0
-    MOVE = 1
-    ATTACK = 2
-    PROJECT = 3
+    RUN = 1
+    JUMP = 2
+    CLIMB = 3
     
 from enum import IntEnum
 class Direction(IntEnum):
