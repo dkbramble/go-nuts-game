@@ -33,27 +33,32 @@ def main():
     p.world_size = world_size
     p.rect = p.image.get_rect()
 
-    s = Spider(10, 250, 50, 70)
+    s = Spider(10, 250, 50, 70, "h")
     s.blocks.add(t.impassable)
     s.world_size = world_size
     s.rect = s.image.get_rect()
 
-    s2 = Spider(10, 1590, 546, 140)
+    s2 = Spider(10, 1590, 630, 200, "v")
     s2.blocks.add(t.impassable)
     s2.world_size = world_size
     s2.rect = s.image.get_rect()
 
-    s3 = Spider(10, 3111, 667, 140)
+    s3 = Spider(10, 3090, 700, 230, "v")
     s3.blocks.add(t.impassable)
     s3.world_size = world_size
     s3.rect = s.image.get_rect()
+
+    s4 = Spider(10, 3530, 957, 200, "fL")
+    s4.blocks.add(t.impassable)
+    s4.world_size = world_size
+    s4.rect = s.image.get_rect()
 
     b = Bee(10, 200, 100, 20, "h")
     b.blocks.add(t.impassable)
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    b2 = Bee(10, 2486, 790, 100, "s")
+    b2 = Bee(10, 2486, 790, 200, "s")
     b2.blocks.add(t.impassable)
     b2.world_size = world_size
     b2.rect = b.image.get_rect()
@@ -68,6 +73,11 @@ def main():
     l2.world_size = world_size
     l2.rect = l.image.get_rect()
 
+    l3 = Leafbug(10, 4259, 30, 150, "s")
+    l3.blocks.add(t.impassable)
+    l3.world_size = world_size
+    l3.rect = l.image.get_rect()
+
     ac = Acorn(10, 500, 100)
     ac.blocks.add(t.impassable)
     ac.world_size = world_size
@@ -76,23 +86,36 @@ def main():
 
     e.objects.append(p)
 
-    e.objects.append(s)
     e.objects.append(b)
+    e.objects.append(b2)
+
     e.objects.append(l)
+    e.objects.append(l2)
+    e.objects.append(l3)
+
+    e.objects.append(s)
     e.objects.append(s2)
     e.objects.append(s3)
-    e.objects.append(b2)
-    e.objects.append(l2)
+    e.objects.append(s4)
+
     e.objects.append(ac)
 
+    #Adding Drawables
     e.drawables.add(p)
     e.drawables.add(s)
+
     e.drawables.add(b)
+    e.drawables.add(b2)
+
     e.drawables.add(l)
+    e.drawables.add(l2)
+    e.drawables.add(l3)
+
+    e.drawables.add(s)
     e.drawables.add(s2)
     e.drawables.add(s3)
-    e.drawables.add(b2)
-    e.drawables.add(l2)
+    e.drawables.add(s4)
+
     e.drawables.add(ac)
 
     e.drawables.add(o)
@@ -107,7 +130,7 @@ def main():
     e.objects.append(w)
     e.objects.append(bu)
 
-    e.collisions[(p, p.ouch)] = [b,s,l,b2,s2,l2,s3]
+    e.collisions[(p, p.ouch)] = [s,s2,s3,s4,b,b2,l,l2,l3]
     e.collisions[(p, p.win)] = [ac]
     pygame.time.set_timer(pygame.USEREVENT + 1, 100 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 2, 125 // league.Settings.gameTimeFactor)
@@ -116,6 +139,8 @@ def main():
     pygame.time.set_timer(pygame.USEREVENT + 5, 125 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 6, 100 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 7, 100 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 8, 100 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 9, 100 // league.Settings.gameTimeFactor)
 
     e.key_events[pygame.K_a] = p.move_left
     e.key_events[pygame.K_d] = p.move_right
@@ -128,13 +153,15 @@ def main():
     e.add_key(pygame.K_b, p.climb_on)
     e.add_key(pygame.K_q, p.print_place)
     e.add_key(pygame.K_SPACE, p.climb_off)
-    e.events[pygame.USEREVENT + 1] = s3.move
-    e.events[pygame.USEREVENT + 2] = s.move
-    e.events[pygame.USEREVENT + 3] = b.move
-    e.events[pygame.USEREVENT + 4] = l.move
-    e.events[pygame.USEREVENT + 5] = s2.move
-    e.events[pygame.USEREVENT + 6] = b2.move
-    e.events[pygame.USEREVENT + 7] = l2.move
+    e.events[pygame.USEREVENT + 1] = b.move
+    e.events[pygame.USEREVENT + 2] = b2.move
+    e.events[pygame.USEREVENT + 3] = s.move
+    e.events[pygame.USEREVENT + 4] = s2.move
+    e.events[pygame.USEREVENT + 5] = s3.move
+    e.events[pygame.USEREVENT + 6] = s4.move
+    e.events[pygame.USEREVENT + 7] = l.move
+    e.events[pygame.USEREVENT + 8] = l2.move
+    e.events[pygame.USEREVENT + 9] = l3.move
     e.events[pygame.QUIT] = e.stop
     e.run()
 

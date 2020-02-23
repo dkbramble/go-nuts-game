@@ -163,6 +163,9 @@ class Player(Character):
     def climb_off(self, time):
         self.climb = False
 
+    def print_place(self, time):
+        print(str(self.x) + "   " + str(self.y))
+
     def update(self, time):
         self.rect.x = self.x
         self.rect.y = self.y

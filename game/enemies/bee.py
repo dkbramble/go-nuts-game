@@ -14,10 +14,6 @@ class Bee(Character):
         self.next_x = x
         self.next_y = y
         # Range of motion spider will have
-        self.delta = delta
-
-        self.movement = Movement(self,motion_range,motion_type)
-
         self.motion_range = motion_range
         self.motion_type = motion_type
 
@@ -79,6 +75,7 @@ class Bee(Character):
         self.collider = Drawable()
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
+        self.movement = Movement(self,motion_range,motion_type)
 
     def update_image(self):
         self.image = self.images[self.h_direction][self.image_num]
@@ -107,10 +104,10 @@ class Bee(Character):
         self.collisions = []
         amount = self.delta * time
         self.update_image()
-        self.movement.move(amount)
-        # next_dir = self.get_next_direction()
-        # if self.cardinal_movement[self.direction](amount, next_dir):
-        #     self.change_direction(next_dir)
+        # self.movement.move(amount)
+        next_dir = self.get_next_direction()
+        if self.cardinal_movement[self.direction](amount, next_dir):
+            self.change_direction(next_dir)
 
     def move_north(self, amount, next_dir):
         self.y = self.y - amount
@@ -120,7 +117,7 @@ class Bee(Character):
             self.update(0)
             self.direction = next_dir
             return True
-        if  self.y - self.next_y <= 0:
+        if  self.y <= self.next_y:
             self.direction = next_dir
             return True
         return False
@@ -129,11 +126,11 @@ class Bee(Character):
         self.y = self.y + amount
         self.update(0)
         if len(self.collisions) != 0:
-            self.y = self.y - 2*amount
+            self.y = self.y - amount
             self.update(0)
             self.direction = next_dir
             return True
-        if self.y - self.next_y >= self.motion_range:
+        if self.y >= self.next_y:
             self.direction = next_dir
             return True
         return False
