@@ -50,17 +50,17 @@ def main():
         s2 = Spider(10, 1590, 630, 200, "v")
         s2.blocks.add(t.impassable)
         s2.world_size = world_size
-        s2.rect = s.image.get_rect()
+        s2.rect = s2.image.get_rect()
 
         s3 = Spider(10, 3090, 700, 230, "v")
         s3.blocks.add(t.impassable)
         s3.world_size = world_size
-        s3.rect = s.image.get_rect()
+        s3.rect = s3.image.get_rect()
 
         s4 = Spider(10, 3530, 957, 200, "fL")
         s4.blocks.add(t.impassable)
         s4.world_size = world_size
-        s4.rect = s.image.get_rect()
+        s4.rect = s4.image.get_rect()
 
         b = Bee(10, 3482, 3134, 220, "v")
         b.blocks.add(t.impassable)
@@ -70,17 +70,17 @@ def main():
         b2 = Bee(10, 2486, 790, 200, "s")
         b2.blocks.add(t.impassable)
         b2.world_size = world_size
-        b2.rect = b.image.get_rect()
+        b2.rect = b2.image.get_rect()
 
         b3 = Bee(10, 5940, 1078, 170, "fL")
         b3.blocks.add(t.impassable)
         b3.world_size = world_size
-        b3.rect = b.image.get_rect()
+        b3.rect = b3.image.get_rect()
 
         b4 = Bee(10, 6185, 1509, 250, "s")
         b4.blocks.add(t.impassable)
         b4.world_size = world_size
-        b4.rect = b.image.get_rect()
+        b4.rect = b4.image.get_rect()
 
         l = Leafbug(10, 2213, 3103, 500, "h")
         l.blocks.add(t.impassable)
@@ -95,12 +95,12 @@ def main():
         l3 = Leafbug(10, 4259, 30, 150, "s")
         l3.blocks.add(t.impassable)
         l3.world_size = world_size
-        l3.rect = l.image.get_rect()
+        l3.rect = l3.image.get_rect()
 
         l4 = Leafbug(10, 6559, 1215, 250, "h")
         l4.blocks.add(t.impassable)
         l4.world_size = world_size
-        l4.rect = l.image.get_rect()
+        l4.rect = l4.image.get_rect()
 
         ac = Acorn(10, 7000, 3300)
         ac.blocks.add(t.impassable)
@@ -177,7 +177,7 @@ def main():
         e.drawables.add(lose)
         e.drawables.add(w)
 
-        e.collisions[(p, p.ouch)] = [s,s2,s3,s4,b,b2,b3,b4,l,l2,l3,l4]
+        e.collisions[(p, p.ouch)] = [s,s2,s3,s4,b,b2,b3,b4,l,l3,l4]
         e.collisions[(p, p.win)] = [ac]
         #Bees
         pygame.time.set_timer(pygame.USEREVENT + 1, 100 // league.Settings.gameTimeFactor)
