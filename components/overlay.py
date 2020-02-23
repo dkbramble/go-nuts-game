@@ -1,5 +1,6 @@
 import league
 import pygame
+from components.sound_manager import SoundManager
 
 class Overlay(league.DUGameObject):
     def __init__(self, player):
@@ -58,6 +59,8 @@ class Overlay_Button(league.DUGameObject):
         try:
             if self.rect.x + 140 > mouse[0] > self.rect.x + 50 and 275 > mouse[1] > 245:
                 if "Reset" in self.tx:
+                    s = SoundManager()
+                    s.play_sound('I_could_go_again.wav')
                     self.e.restart(deltaTime, True)
                 if "Quit" in self.tx:
                     self.e.stop(deltaTime)

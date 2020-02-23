@@ -1,6 +1,6 @@
 import league
 import pygame
-from components import *
+from components.sound_manager import SoundManager
 from components.overlay import Overlay_Button
 
 class Lose_Overlay(league.DUGameObject):
@@ -29,7 +29,7 @@ class Lose_Overlay(league.DUGameObject):
             if s.get_playing() == True:
                 s.bgm_control()
                 s.set_playing(True)
-            s.play_sound('horn.wav')
+            s.play_sound('nut_my_day.wav')
             self.e.events.clear()
             self.e.collisions.clear()
             self.e.registered_keys.clear()

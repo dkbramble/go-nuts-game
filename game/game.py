@@ -102,12 +102,20 @@ def main():
         l4.world_size = world_size
         l4.rect = l.image.get_rect()
 
-        ac = Acorn(10, 7000, 3390)
+        ac = Acorn(10, 7000, 3300)
         ac.blocks.add(t.impassable)
         ac.world_size = world_size
         ac.rect = ac.image.get_rect()
         
-        w = Win_Overlay(p)
+       
+        resetL = Overlay_Button(200,250, False, "            Reset", (209, 45, 25), (0,0,0), (255,255,255), e)
+        quL = Overlay_Button(375,250, False, "         Quit", (209, 45, 25), (0,0,0), (255,255,255), e)
+        resetW = Overlay_Button(200,250, False, "            Reset", (53,50,150), (209, 45, 25), (255,255,255), e)
+        quW = Overlay_Button(375,250, False, "         Quit", (53,50,150), (209, 45, 25), (255,255,255), e)
+
+        lose = Lose_Overlay(p, resetL, quL, e)
+        w = Win_Overlay(p, resetW, quW, e)
+        c = league.LessDumbCamera(800, 400, p, e.drawables, world_size)
 
         e.objects.append(p)
 
@@ -150,25 +158,23 @@ def main():
         e.drawables.add(ac)
 
         e.drawables.add(o)
-        e.drawables.add(w)
         e.drawables.add(bu)
 
-        reset = Overlay_Button(200,250, False, "            Reset", (209, 45, 25), (0,0,0), (255,255,255), e)
-        qu = Overlay_Button(375,250, False, "         Quit", (209, 45, 25), (0,0,0), (255,255,255), e)
-        lose = Lose_Overlay(p, reset, qu, e)
-        c = league.LessDumbCamera(800, 400, p, e.drawables, world_size)
-
-
-        e.objects.append(reset)
-        e.objects.append(qu)
+        e.objects.append(resetL)
+        e.objects.append(quL)
+        e.objects.append(resetW)
+        e.objects.append(quW)
         e.objects.append(lose)
         e.objects.append(c)
         e.objects.append(o)
         e.objects.append(w)
 
-        e.drawables.add(qu)
-        e.drawables.add(reset)
+        e.drawables.add(quL)
+        e.drawables.add(resetL)
+        e.drawables.add(quW)
+        e.drawables.add(resetW)
         e.drawables.add(lose)
+        e.drawables.add(w)
 
         e.collisions[(p, p.ouch)] = [s,s2,s3,s4,b,b2,b3,b4,l,l2,l3,l4]
         e.collisions[(p, p.win)] = [ac]

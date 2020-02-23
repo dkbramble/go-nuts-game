@@ -33,7 +33,7 @@ class Acorn(Character):
         right = []
         for filename in sorted(os.listdir("./enemies/acorn/")):
             tmp = pygame.image.load('./enemies/acorn/' + filename).convert_alpha()
-            tmp = pygame.transform.scale(tmp, (32, 64))
+            tmp = pygame.transform.scale(tmp, (64, 128))
             right.append(tmp)
         self.images = right
         # self.images = pygame.image.load('../enemies/bee/bee-0.png').convert_alpha()
