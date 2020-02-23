@@ -23,11 +23,9 @@ class SoundManager():
         if playing:
             pygame.mixer.music.pause()
             playing = False
-            print("Stop")
         else:
             pygame.mixer.music.unpause()   
             playing = True
-            print("Go")
 
     def play_sound(self, file):
         file_path = self.sound_path + file
