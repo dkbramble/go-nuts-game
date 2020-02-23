@@ -14,18 +14,24 @@ class Player(Character):
         super().__init__(z, x, y)
         # This unit's health
         self.health = 100
+
+        #states   
         self.climb = False
+        self.jumping = False
+
         self.climb_direction = 0
 
-        # Being in the state of jumping will:
-        # alter our y-position up or down depending on trajectory, 
-        # Turn climbing off to enable jumping from climb, 
-        # 
-        self.jumping = False
-        # Are we in the upward or downward trajectory.
-        self.jumping_direction = 1
-        #number of units to jump up to before falling.
+        
+
+        #movement constants
         self.jump_height = 100
+        #defines how far along in the jump we are 0->1
+        self.jump_delta = 0
+        self.jump_start = self.y
+
+        self.move_speed = 512
+        self.gravity = 200
+        
         
         # Initial x and y to reset the player position to.  
         # Debug purposes.
@@ -100,16 +106,32 @@ class Player(Character):
             except:
                 pass
 
+    def jump(self, time):  
+        
+        self.jumping = True
+        self.climb_off(time)
+
+        self.jump_delta = 0
+        self.jump_start = self.y
+
+    def lerpY(self, time, t):
+        terminus = self.jump_start - self.jump_height
+        return self.lerp(self.jump_start, terminus, t)
+
+    def lerp(self, vI, vF, delta):
+        return vI + delta * (vF - vI)
+
     def move_up(self, time):
         self.collisions = []
         amount = self.delta * time
-        # s = SoundManager()
-        # s.play_sound('thanks.wav')
         try:
             if self.y - amount < 0:
                 raise OffScreenTopException
             else:
-                self.y = self.y - amount
+                if self.jumping :
+                    self.y = self.lerpY(time, self.jump_delta)
+                else:
+                    self.y = self.y - amount
                 self.update(0)
                 if len(self.collisions) != 0:
                     self.y = self.y + amount
@@ -127,13 +149,18 @@ class Player(Character):
         except: 
             pass
 
+    def update_jump(self, time):
+        if self.jumping:
+            if (self.jump_delta >= 1) or (self.y < self.y-self.jump_height):
+                self.jumping = False
+                return
+            self.jump_delta = self.jump_delta + .1
+            print(self.jump_delta)
+            self.move_up(time)
+            self.update(0)
 
     def move_down(self, time):
-        amount = self.delta * time
-        # s = SoundManager()
-        # s.play_sound('oh.wav')
-        if not self.climb:
-            return
+        amount = self.gravity * time
         
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
@@ -144,6 +171,7 @@ class Player(Character):
                 if len(self.collisions) != 0:
                     self.y = self.y - amount
                     self.update(0)
+                    self.jumping = False
                     self.collisions = []
             if self.climb:
                 amount = self.delta * time * self.climb_direction
@@ -188,16 +216,12 @@ class Player(Character):
         self.climb = False
 
 
-    def jump(self, time):
-        self.jumping = True
-        self.climbOff(time)
-        amount = self.delta * time * direction
-
-
+    
     def update(self, time):
         self.rect.x = self.x
         self.rect.y = self.y
         self.collisions = []
+        
         for sprite in self.blocks:
             self.collider.rect.x= sprite.x
             self.collider.rect.y = sprite.y

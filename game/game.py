@@ -81,30 +81,33 @@ def main():
     e.objects.append(bu)
 
     e.collisions[p] = (q, p.ouch) 
-    pygame.time.set_timer(pygame.USEREVENT + 1, 1000 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 1, 20 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 2, 125 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 4, 100 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 5, 20 // league.Settings.gameTimeFactor)
 
     e.key_events[pygame.K_a] = p.move_left
     e.key_events[pygame.K_d] = p.move_right
-    e.key_events[pygame.K_w] = p.move_up
-    e.key_events[pygame.K_s] = p.move_down
+    # e.key_events[pygame.K_w] = p.move_up
+    # e.key_events[pygame.K_s] = p.move_down
     e.add_key(pygame.K_a, p.move_left)
     e.add_key(pygame.K_d, p.move_right)
 
-    e.add_key(pygame.K_w, p.move_up)
-
-    e.add_key(pygame.K_s, p.move_down)
+    # e.add_key(pygame.K_s, p.move_down)
     e.add_key(pygame.K_b, p.climb_on)
-    e.add_key(pygame.K_SPACE, p.climb_off)
+    e.add_key(pygame.K_SPACE, p.jump)
 
     e.add_key(pygame.K_COMMA, p.reset_position)
 
-    e.events[pygame.USEREVENT + 1] = q.move_right
+    e.events[pygame.USEREVENT + 1] = p.move_down #gravity
     e.events[pygame.USEREVENT + 2] = s.move
     e.events[pygame.USEREVENT + 3] = b.move
     e.events[pygame.USEREVENT + 4] = a.move
+    e.events[pygame.USEREVENT + 5] = p.update_jump
+
+
+
     e.events[pygame.QUIT] = e.stop
     e.run()
 
