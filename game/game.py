@@ -90,7 +90,7 @@ def main():
         l2 = Leafbug(10, 1230, 167, 400, "h")
         l2.blocks.add(t.impassable)
         l2.world_size = world_size
-        l2.rect = l.image.get_rect()
+        l2.rect = l2.image.get_rect()
 
         l3 = Leafbug(10, 4259, 30, 150, "s")
         l3.blocks.add(t.impassable)

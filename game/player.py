@@ -82,8 +82,6 @@ class Player(Character):
         self.font = pygame.font.Font('freesansbold.ttf',32)
 
     def load_images(self):
-        for enum in State:
-            print(enum)
         images = {
             State.IDLE: {
                 Direction.EAST: [],
@@ -130,9 +128,13 @@ class Player(Character):
         self.y = self.yI
 
     def change_state(self, next_state):
-        if self.state != next_state and not (self.jumping or self.climb):
-            self.state = next_state
-            self.image_num = 0
+        if self.state != next_state and not self.jumping:
+            if next_state == State.JUMP:
+                self.state = next_state
+                self.image_num = 0
+            elif not self.climb:
+                self.state = next_state
+                self.image_num = 0
         self.state_switch_time = pygame.time.get_ticks()
 
 
@@ -197,7 +199,11 @@ class Player(Character):
             if (self.jump_delta >= 1) or (self.y < self.y-self.jump_height): # if player is at peak of jump
                 self.falling = True 
                 return
+<<<<<<< HEAD
+            self.jump_delta = self.jump_delta + .1
+=======
             self.jump_delta = self.jump_delta + .03 #otherwise increase the 'time' through the jump
+>>>>>>> 4f4754adcbc2c9f882b145c2504cb21c666c933b
             if not self.falling:
                 self.move_up(time) #Move up by increment dependent on lerp.
             self.update(0)
@@ -320,8 +326,8 @@ class Player(Character):
                     self.x = self.x - amount
                     self.update(0)
                 else:
+                    self.change_state(State.CLIMB)
                     self.climb = True
-                    self.state = State.CLIMB
                     while(len(self.collisions) != 0):
                         self.x = self.x - amount
                         self.update(0)
