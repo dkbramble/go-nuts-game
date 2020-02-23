@@ -35,7 +35,7 @@ def main():
         ##e.drawables.add(d.passable.sprites())
         m = SoundManager()
         m.bgm_start('Song_For_Someone.wav')
-        p = Player(2, 420, 180)
+        p = Player(2, 420, 100)
         o = Overlay(p)
         bu = MusicButton()
         p.blocks.add(t.impassable)
@@ -90,7 +90,7 @@ def main():
         l2 = Leafbug(10, 1230, 167, 400, "h")
         l2.blocks.add(t.impassable)
         l2.world_size = world_size
-        l2.rect = l.image.get_rect()
+        l2.rect = l2.image.get_rect()
 
         l3 = Leafbug(10, 4259, 30, 150, "s")
         l3.blocks.add(t.impassable)
@@ -195,11 +195,13 @@ def main():
         pygame.time.set_timer(pygame.USEREVENT + 22, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 23, 100 // league.Settings.gameTimeFactor)
         #Nutthaniel
-        pygame.time.set_timer(pygame.USEREVENT + 30, 20 // league.Settings.gameTimeFactor)
-        pygame.time.set_timer(pygame.USEREVENT + 31, 20 // league.Settings.gameTimeFactor)
+        pygame.time.set_timer(pygame.USEREVENT + 30, 10 // league.Settings.gameTimeFactor)
+        pygame.time.set_timer(pygame.USEREVENT + 31, 5 // league.Settings.gameTimeFactor)
 
         e.add_key(pygame.K_a, p.move_left)
         e.add_key(pygame.K_d, p.move_right)
+        e.add_key(pygame.K_w, p.move_up)
+        e.add_key(pygame.K_s, p.move_down)
 
         e.add_key(pygame.K_q, p.print_place)
 
@@ -220,7 +222,7 @@ def main():
         e.events[pygame.USEREVENT + 21] = s2.move
         e.events[pygame.USEREVENT + 22] = s3.move
         e.events[pygame.USEREVENT + 23] = s4.move
-        e.events[pygame.USEREVENT + 30] = p.move_down #gravity
+        e.events[pygame.USEREVENT + 30] = p.move_down_gravity
         e.events[pygame.USEREVENT + 31] = p.update_jump
 
         e.events[pygame.QUIT] = e.stop
