@@ -20,9 +20,7 @@ class Player(Character):
         self.jumping = False
 
         self.climb_direction = 0
-
         
-
         #movement constants
         self.jump_height = 100
         #defines how far along in the jump we are 0->1
@@ -41,6 +39,7 @@ class Player(Character):
         self.xI = x
         self.yI = y
 
+        self.got_acorn = False
         # Last time I was hit
         self.last_hit = pygame.time.get_ticks()
         # A unit-less value.  Bigger is faster.
@@ -79,7 +78,6 @@ class Player(Character):
         self.collider.rect = self.collider.image.get_rect()
         # Overlay
         self.font = pygame.font.Font('freesansbold.ttf',32)
-        self.overlay = self.font.render(str(self.health) + "        4 lives", True, (0,0,0))
 
     def load_images(self):
         for enum in State:
@@ -295,6 +293,8 @@ class Player(Character):
             else:
                 self.image_num +=1
             self.image_delay = now
+    def print_place(self, time):
+        print(str(self.x) + "   " + str(self.y))
 
     def update(self, time):
         self.rect.x = self.x
@@ -315,4 +315,11 @@ class Player(Character):
             oucies_soundies = ['ow_1.wav','ow_2.wav','op.wav']
             s.play_sound(random.choice(oucies_soundies))
             self.health = self.health - 10
+            if self.health < 0:
+                self.health = 0
             self.last_hit = now
+
+    def win(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_hit > 1000:
+            self.got_acorn = True

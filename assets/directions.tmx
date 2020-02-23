@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="-1" width="3" height="3" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="9">
+ <tileset firstgid="1" source="16.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="3" height="3">
+  <data encoding="csv">
+0,0,0,
+0,0,0,
+0,0,0
+</data>
+ </layer>
+ <objectgroup id="2" name="Object Layer 1">
+  <object id="1" x="0.45299" y="0.288031" width="64" height="19">
+   <text fontfamily="MS Shell Dlg 2" pixelsize="7" wrap="1" color="#ffffff">Move: WASD</text>
+  </object>
+  <object id="3" x="0.474381" y="10.7487" width="95.7103" height="23.9667">
+   <text fontfamily="MS Shell Dlg 2" pixelsize="7" wrap="1" color="#ffffff">Climb: Move Into Wall + K</text>
+  </object>
+  <object id="4" x="0.920096" y="20.3637" width="63.618" height="23.9667">
+   <text fontfamily="MS Shell Dlg 2" pixelsize="7" wrap="1" color="#ffffff">Jump: SPACE</text>
+  </object>
+  <object id="5" x="72.4787" y="38.3838" width="17.1598" height="19">
+   <text fontfamily="Wingdings 3" pixelsize="17" wrap="1" color="#ffffff">w</text>
+  </object>
+  <object id="6" x="7.97567" y="69.33" width="17.1598" height="19">
+   <text fontfamily="Wingdings 3" pixelsize="17" wrap="1" color="#ffffff">s</text>
+  </object>
+  <object id="7" x="40.1953" y="69.33" width="17.1598" height="19">
+   <text fontfamily="Wingdings 3" pixelsize="17" wrap="1" color="#ffffff">v</text>
+  </object>
+  <object id="8" x="71.7783" y="68.9479" width="17.1598" height="19">
+   <text fontfamily="Wingdings 3" pixelsize="17" wrap="1" color="#ffffff">s</text>
+  </object>
+ </objectgroup>
+</map>

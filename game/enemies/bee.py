@@ -1,32 +1,52 @@
 from league import *
 from components import *
-from league import *
 import pygame
 import sys
-sys.path.append('..')
-import league
+from enemies.movement import Movement
 
 class Bee(Character):
-    """This is a sample class for a player object.  A player
-    is a character, is a drawable, and an updateable object.
-    This class should handle everything a player does, such as
-    moving, throwing/shooting, collisions, etc.  It was hastily
-    written as a demo but should direction.
-    """
-    def __init__(self, z=0, x=0, y=0, motion_range=100, motion_shape="I"):
+
+    def __init__(self, z=0, x=0, y=0, motion_range=100, motion_type="h", delta = 400):
         super().__init__(z, x, y)
         # Where the player is positioned
         self.x = x
         self.y = y
-        self.origin_x = x
-        self.origin_y = y
+        self.next_x = x
+        self.next_y = y
         # Range of motion spider will have
         self.motion_range = motion_range
+        self.motion_type = motion_type
+
+        self.cardinal_movement = {
+            Direction.NORTH: self.move_north,
+            Direction.SOUTH: self.move_south,
+            Direction.EAST: self.move_east,
+            Direction.WEST: self.move_west
+        }
+
+        ''' 
+        Movement types are as follows:
+            h: Horizontal line
+            v: Vertical Line
+            L: L-shaped motion
+            fL: Flipped L-Shape Motion
+            s: Square
+        '''
+        movement_orders = {
+            "h": [Direction.WEST, Direction.EAST],
+            "v": [Direction.NORTH, Direction.SOUTH],
+            "L": [Direction.SOUTH, Direction.EAST, Direction.WEST, Direction.NORTH],
+            "fL": [Direction.EAST, Direction.SOUTH, Direction.NORTH, Direction.WEST],
+            "s": [Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH]
+        }
+        self.move_order = movement_orders[motion_type]
+        # self.motion_func = movement_funcs[motion_type]
         # Tracks state of direction. D - Down. U - Up
         self.h_direction = Direction.WEST
-        self.v_direction = Direction.NORTH
+        self.direction = self.move_order[0]
+        self.change_direction(self.direction)
 
-        self.delta = 350
+        self.delta = delta
         # The image to use.  This will change frequently
         # in an animated Player class.
         self.image_num = 0
@@ -35,7 +55,6 @@ class Bee(Character):
         right = []
         left = []
         for filename in sorted(os.listdir("./enemies/bee/")):
-            print(filename)
             tmp = pygame.image.load('./enemies/bee/' + filename).convert_alpha()
             tmp = pygame.transform.scale(tmp, (64, 64))
             right.append(tmp)
@@ -56,6 +75,7 @@ class Bee(Character):
         self.collider = Drawable()
         self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
         self.collider.rect = self.collider.image.get_rect()
+        self.movement = Movement(self,motion_range,motion_type)
 
     def update_image(self):
         self.image = self.images[self.h_direction][self.image_num]
@@ -65,62 +85,81 @@ class Bee(Character):
         else:
         	self.image_num += 1 
 
+    def get_next_direction(self):
+        return self.move_order[(self.move_order.index(self.direction)+1)%len(self.move_order)]
+
+    def change_direction(self, direction):
+        if direction == Direction.NORTH:
+            self.next_y = self.next_y - self.motion_range
+        elif direction == Direction.SOUTH:
+            self.next_y = self.next_y + self.motion_range
+        elif direction == Direction.EAST:
+            self.next_x = self.next_x + self.motion_range
+            self.h_direction = direction
+        elif direction == Direction.WEST:
+            self.next_x = self.next_x - self.motion_range
+            self.h_direction = direction
+
     def move(self, time):
         self.collisions = []
         amount = self.delta * time
         self.update_image()
-        try:
-            if self.y + amount > self.world_size[0] - Settings.tile_size:
-                raise OffScreenTopException
-            elif self.v_direction == Direction.SOUTH:
-                self.move_south(amount)
-            elif self.v_direction == Direction.NORTH:
-                self.move_north(amount)
+        # self.movement.move(amount)
+        next_dir = self.get_next_direction()
+        if self.cardinal_movement[self.direction](amount, next_dir):
+            self.change_direction(next_dir)
 
-            if self.x + amount > self.world_size[0] - Settings.tile_size:
-                raise OffScreenTopException
-            elif self.h_direction == Direction.WEST:
-                self.move_west(amount)
-            elif self.h_direction == Direction.EAST:
-                self.move_east(amount)
-        except:
-            pass
-
-    def move_north(self, amount):
+    def move_north(self, amount, next_dir):
         self.y = self.y - amount
         self.update(0)
-        while(len(self.collisions) != 0):
-            self.y = self.y + amount
+        if len(self.collisions) != 0:
+            self.y = self.y + 2*amount
             self.update(0)
-        if  self.y - self.origin_y <= 0:
-            self.v_direction = Direction.SOUTH
+            self.direction = next_dir
+            return True
+        if  self.y <= self.next_y:
+            self.direction = next_dir
+            return True
+        return False
 
-    def move_south(self, amount):
+    def move_south(self, amount, next_dir):
         self.y = self.y + amount
         self.update(0)
-        while(len(self.collisions) != 0):
+        if len(self.collisions) != 0:
             self.y = self.y - amount
             self.update(0)
-        if self.y - self.origin_y >= self.motion_range:
-            self.v_direction = Direction.NORTH
+            self.direction = next_dir
+            return True
+        if self.y >= self.next_y:
+            self.direction = next_dir
+            return True
+        return False
 
-    def move_west(self, amount):
+    def move_west(self, amount, next_dir):
         self.x = self.x - amount
         self.update(0)
-        while(len(self.collisions) != 0):
-            self.x = self.x + amount
+        if len(self.collisions) != 0:
+            self.x = self.x + 2*amount
             self.update(0)
-        if self.x - self.origin_x <= 0:
-            self.h_direction = Direction.EAST
+            self.direction = next_dir
+            return True
+        if self.x <= self.next_x:
+            self.direction = next_dir
+            return True
+        return False
 
-    def move_east(self, amount):
+    def move_east(self, amount, next_dir):
         self.x = self.x + amount
         self.update(0)
-        while(len(self.collisions) != 0):
-            self.x = self.x - amount
+        if len(self.collisions) != 0:
+            self.x = self.x - 2*amount
             self.update(0)
-        if  self.x - self.origin_x >= self.motion_range:
-            self.h_direction = Direction.WEST
+            self.direction = next_dir
+            return True
+        if  self.x >= self.next_x:
+            self.direction = next_dir
+            return True
+        return False
 
     def update(self, time):
         self.rect.x = self.x
