@@ -44,6 +44,7 @@ class Engine:
         self.visible_statistics = False
         self.statistics_font = None
         self.collisions = {}
+        self.reset = False
 
     def init_pygame(self):
         """This function sets up the state of the pygame system,
@@ -140,7 +141,7 @@ class Engine:
     # Restart the engine
     def restart(self, time, res):
         self.running = False
-        res = True
+        self.reset = res
 
     # Shutdown pygame
     def end(self, time):

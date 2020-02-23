@@ -28,6 +28,7 @@ class Lose_Overlay(league.DUGameObject):
             s = SoundManager()
             if s.get_playing() == True:
                 s.bgm_control()
+                s.set_playing(True)
             s.play_sound('horn.wav')
             self.e.events.clear()
             self.e.collisions.clear()

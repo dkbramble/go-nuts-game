@@ -20,6 +20,7 @@ class SoundManager():
 
     def bgm_control(self):
         global playing
+        print(playing)
         if playing:
             pygame.mixer.music.pause()
             playing = False
@@ -35,3 +36,7 @@ class SoundManager():
     
     def get_playing(self):
         return playing
+
+    def set_playing(self, play):
+        global playing
+        playing = play
