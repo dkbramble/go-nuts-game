@@ -172,26 +172,32 @@ def main():
 
         e.collisions[(p, p.ouch)] = [s,s2,s3,s4,b,b2,b3,b4,l,l2,l3,l4]
         e.collisions[(p, p.win)] = [ac]
+        #Bees
         pygame.time.set_timer(pygame.USEREVENT + 1, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 2, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 4, 100 // league.Settings.gameTimeFactor)
+        #Leafbugs
         pygame.time.set_timer(pygame.USEREVENT + 10, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 11, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 12, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 13, 100 // league.Settings.gameTimeFactor)
+        #Spiders
         pygame.time.set_timer(pygame.USEREVENT + 20, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 21, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 22, 100 // league.Settings.gameTimeFactor)
         pygame.time.set_timer(pygame.USEREVENT + 23, 100 // league.Settings.gameTimeFactor)
+        #Nutthaniel
+        pygame.time.set_timer(pygame.USEREVENT + 30, 20 // league.Settings.gameTimeFactor)
+        pygame.time.set_timer(pygame.USEREVENT + 31, 20 // league.Settings.gameTimeFactor)
 
         e.add_key(pygame.K_a, p.move_left)
         e.add_key(pygame.K_d, p.move_right)
-        e.add_key(pygame.K_w, p.move_up)
-        e.add_key(pygame.K_s, p.move_down)
-        e.add_key(pygame.K_b, p.climb_on)
+
         e.add_key(pygame.K_q, p.print_place)
-        e.add_key(pygame.K_SPACE, p.climb_off)
+
+        e.add_key(pygame.K_b, p.climb_on)
+        e.add_key(pygame.K_SPACE, p.jump)
 
         e.events[pygame.MOUSEBUTTONDOWN] = bu.mouse_click
 
@@ -207,6 +213,8 @@ def main():
         e.events[pygame.USEREVENT + 21] = s2.move
         e.events[pygame.USEREVENT + 22] = s3.move
         e.events[pygame.USEREVENT + 23] = s4.move
+        e.events[pygame.USEREVENT + 30] = p.move_down #gravity
+        e.events[pygame.USEREVENT + 31] = p.update_jump
 
         e.events[pygame.QUIT] = e.stop
         e.run()
