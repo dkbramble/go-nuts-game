@@ -141,7 +141,7 @@ class Spritesheet:
     def __init__(self, path, tile_size, per_row):
         self.path = path
         self.sheet = pygame.image.load(self.path).convert_alpha()
-        self.tile_size = tile_size
+        self.tile_size = int(tile_size)
         self.per_row = per_row
         self.width, self.height = self.sheet.get_size()
         self.sprites = self.__split_up()
@@ -150,7 +150,7 @@ class Spritesheet:
         # This function splits the sheet up into equal-sized chunks,
         # and returns a list of the chunks.
         sprites = []
-        for i in range((self.width * self.height) // (Settings.tile_size * Settings.tile_size)):
+        for i in range((self.width * self.height) // (self.tile_size * self.tile_size)):
                 image = self.__get_image_num(i)
                 sprites.append(image)
         return sprites
