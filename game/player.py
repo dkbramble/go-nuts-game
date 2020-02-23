@@ -171,13 +171,13 @@ class Player(Character):
             self.state_switch_time = pygame.time.get_ticks()
 
     def jump(self, time):  
-        
+        self.climb_off(time)
+
         if not self.jumping:
             self.jump_delta = 0
             self.jump_start = self.y
         self.change_state(State.JUMP)
         self.jumping = True
-        self.climb_off(time)
 
     def update_jump(self, time):
         if self.jumping:
