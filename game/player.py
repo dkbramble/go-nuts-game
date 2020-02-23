@@ -22,13 +22,13 @@ class Player(Character):
         self.climb_direction = 0
         
         #movement constants
-        self.jump_height = 100
+        self.jump_height = 150
         #defines how far along in the jump we are 0->1
         self.jump_delta = 0
         self.jump_start = self.y
 
         self.move_speed = 512
-        self.gravity = 200
+        self.gravity = 80
         
         self.h_direction = Direction.EAST
 
@@ -57,8 +57,10 @@ class Player(Character):
         self.animation_delays = {
             State.JUMP: 150,
             State.RUN: 75,
-            State.IDLE: 75
+            State.IDLE: 75,
+            State.CLIMB: 220
         }
+        self.reverse_climb = False
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
         self.world_size = (Settings.width, Settings.height)
@@ -94,6 +96,10 @@ class Player(Character):
             State.JUMP: {
                 Direction.EAST: [],
                 Direction.WEST: []
+            },
+            State.CLIMB: {
+                Direction.EAST: [],
+                Direction.WEST: []
             }
         }
         sprites = Spritesheet("../assets/nutthaniel/sprMidiP.png", Settings.tile_size/4, 16)
@@ -112,6 +118,11 @@ class Player(Character):
             tmp = pygame.transform.scale(tmp, (64, 64))
             images[State.JUMP][Direction.EAST].append(tmp)
             images[State.JUMP][Direction.WEST].append(pygame.transform.flip(tmp, True, False))
+        for i in range(0,4):
+            tmp = sprites.sprites[i+72].image
+            tmp = pygame.transform.scale(tmp, (64, 64))
+            images[State.CLIMB][Direction.EAST].append(tmp)
+            images[State.CLIMB][Direction.WEST].append(tmp)
         return images
 
     def reset_position(self, time):
@@ -119,7 +130,7 @@ class Player(Character):
         self.y = self.yI
 
     def change_state(self, next_state):
-        if self.state != next_state and not self.jumping:
+        if self.state != next_state and not (self.jumping or self.climb):
             self.state = next_state
             self.image_num = 0
         self.state_switch_time = pygame.time.get_ticks()
@@ -162,37 +173,46 @@ class Player(Character):
                 pass
 
     def reset_idle(self):
-        if pygame.time.get_ticks() - self.state_switch_time > 100:
+        if self.state != State.IDLE and pygame.time.get_ticks() - self.state_switch_time > 100:
             self.change_state(State.IDLE)
+        if pygame.time.get_ticks() - self.state_switch_time > 4000:
+            s = SoundManager()
+            idle_titles = ['feelin_peckish.wav','im_ready.wav','nut_my_day.wav']
+            s.play_sound(random.choice(idle_titles))
+            self.state_switch_time = pygame.time.get_ticks()
 
-
+    """ One time called per jump sets the start point and some other default vals. """
     def jump(self, time):  
-        
+        self.climb_off(time) # jumping stops the climb process.
+
         if not self.jumping:
-            self.jump_delta = 0
-            self.jump_start = self.y
+            self.jump_delta = 0 # 'time' = 0
+            self.jump_start = self.y #set begin point of jump
         self.change_state(State.JUMP)
         self.jumping = True
-        self.climb_off(time)
 
+    """ Called by main game loop and handles the logic for players jumping. """
     def update_jump(self, time):
-        if self.jumping:
-            if (self.jump_delta >= 1) or (self.y < self.y-self.jump_height):
-                self.falling = True
+        if self.jumping: #only executes if player is jumping.
+            if (self.jump_delta >= 1) or (self.y < self.y-self.jump_height): # if player is at peak of jump
+                self.falling = True 
                 return
-            self.jump_delta = self.jump_delta + .1
-            print(self.jump_delta)
+            self.jump_delta = self.jump_delta + .03 #otherwise increase the 'time' through the jump
             if not self.falling:
-                self.move_up(time)
+                self.move_up(time) #Move up by increment dependent on lerp.
             self.update(0)
 
+    """ just calls lerp with player's values. """
     def lerpY(self, time, t):
         terminus = self.jump_start - self.jump_height
         return self.lerp(self.jump_start, terminus, t)
 
+    """ Interpolate between two values.. """
     def lerp(self, vI, vF, delta):
         return vI + delta * (vF - vI)
 
+    """ Allows player to move up while climbing.
+    Also handles jump movement and is called to move the player upwards until they reach their peak. """
     def move_up(self, time):
         self.update_image(time)
         self.collisions = []
@@ -201,10 +221,11 @@ class Player(Character):
             if self.y - amount < 0:
                 raise OffScreenTopException
             else:
-                if self.jumping :
+                if self.jumping and not self.falling :
                     self.y = self.lerpY(time, self.jump_delta)
-                else:
-                    self.y = self.y - amount
+                elif self.climb:
+                    amount = self.delta * time * self.climb_direction
+                    self.x = self.x + amount * 3
                 self.update(0)
                 if len(self.collisions) != 0:
                     self.y = self.y + amount
@@ -223,15 +244,19 @@ class Player(Character):
         except: 
             pass
 
+    """ Player can move down when climbing. """
     def move_down(self, time):
-        amount = self.gravity * time
+        amount = self.delta * time
         self.update_image(time)
         
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
             else:
-                self.y = self.y + amount
+                if self.climb:
+                    self.y = self.y + amount
+                else:
+                    self.y = self.y + amount/2
                 self.update(0)
                 if len(self.collisions) != 0:
                     self.y = self.y - amount
@@ -252,9 +277,32 @@ class Player(Character):
                     self.update(0)
         except:
             pass
+
+    """ Allows the player to fall downwards at a consistent rate."""
+    def move_down_gravity(self, time):
+        amount = self.gravity * time
+        # if self.climb:
+        #     amount = self.delta * time
+        self.update_image(time)
         
-    #Hold right/left to run into an impassible object and press 'k' to climb. climbing will restrict horizontal movement until either the 
-    #space bar is pressed or you reach the top or bottom of a the object.
+        try:
+            if self.y + amount > self.world_size[1] - Settings.tile_size:
+                raise OffScreenBottomException
+            elif not self.climb:
+                self.y = self.y + amount
+                self.update(0)
+                if len(self.collisions) != 0:
+                    self.y = self.y - amount
+                    self.update(0)
+                    self.jumping = False
+                    self.falling = False
+                    self.collisions = []
+        except:
+            pass
+        
+    """Hold right/left to run into an impassible object and press 'k' to climb. 
+    climbing will restrict horizontal movement until either the 
+    space bar is pressed or you reach the top or bottom of a the object."""
     def climb_on(self, time, direction):
         amount = self.delta * time * direction
         self.climb_direction = direction
@@ -265,34 +313,50 @@ class Player(Character):
                 raise OffScreenLeftException
             else:
                 self.x = self.x + amount
+                self.falling = False
+                self.jumping = False
                 self.update(0)
                 if len(self.collisions) == 0:
                     self.x = self.x - amount
                     self.update(0)
                 else:
                     self.climb = True
+                    self.state = State.CLIMB
                     while(len(self.collisions) != 0):
                         self.x = self.x - amount
                         self.update(0)
-
         except:
             pass
 
+    """ Turns off 'climb mode' """
     def climb_off(self, time):
         self.climb = False
 
     def update_image(self, time):
         self.image = self.images[self.state][self.h_direction][self.image_num]
         now = pygame.time.get_ticks()
-        if self.state == State.JUMP and self.image_num == len(self.images[self.state][self.h_direction])-1:
-            self.image_num -= 1
+        images_size = len(self.images[self.state][self.h_direction])
+        if now - self.image_delay > self.animation_delays[self.state]:
+            if self.state == State.JUMP and self.image_num == images_size-1:
+                self.image_num -= 1
+                self.image_delay = now
+            elif self.state == State.CLIMB: 
+                if now - self.image_delay > self.animation_delays[self.state]:
+                    if self.image_num == images_size-1:
+                        self.reverse_climb = True
+                    elif self.image_num == 0:
+                        self.reverse_climb = False
+                    if self.reverse_climb:
+                        self.image_num -= 1
+                    else:
+                        self.image_num += 1
+            else: 
+                if self.image_num == images_size-1:
+                    self.image_num = 0
+                else:
+                    self.image_num +=1
             self.image_delay = now
-        elif now - self.image_delay > self.animation_delays[self.state]:
-            if self.image_num == len(self.images[self.state][self.h_direction])-1:
-                self.image_num = 0
-            else:
-                self.image_num +=1
-            self.image_delay = now
+
     def print_place(self, time):
         print(str(self.x) + "   " + str(self.y))
 
