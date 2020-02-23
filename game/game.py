@@ -19,11 +19,14 @@ def main():
 
     ##sprites = league.Spritesheet('../assets/base_chip_pipo.png', league.Settings.tile_size, 8)
     backgroundMaterial = league.Spritesheet('../assets/woodlandMaterials.png', league.Settings.tile_size, 5)
+    directionalInfo = league.Spritesheet('../assets/directions.png', league.Settings.tile_size, 3)
     t = league.Tilemap('../assets/woodland.lvl', backgroundMaterial, layer = 1)
+    ##d = league.Tilemap('../assets/directions.lvl', directionalInfo, layer = 2)
     b = league.Tilemap('../assets/background.lvl', backgroundMaterial, layer = 0)
     world_size = (t.wide*league.Settings.tile_size, t.high *league.Settings.tile_size)
     e.drawables.add(b.passable.sprites()) 
     e.drawables.add(t.passable.sprites())
+    ##e.drawables.add(d.passable.sprites())
     m = SoundManager()
     m.bgm_start('Song_For_Someone.wav')
     p = Player(2, 400, 200)
@@ -46,7 +49,7 @@ def main():
     b.world_size = world_size
     b.rect = b.image.get_rect()
 
-    ac = Acorn(10, 500, 100)
+    ac = Acorn(10, 7000, 3390)
     ac.blocks.add(t.impassable)
     ac.world_size = world_size
     ac.rect = ac.image.get_rect()
