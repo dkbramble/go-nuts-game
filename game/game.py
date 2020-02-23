@@ -54,9 +54,9 @@ def main():
     ac.world_size = world_size
     ac.rect = ac.image.get_rect()
     w = Win_Overlay(p)
-    reset = Overlay_Button(200,250, False, "            Reset", (209, 45, 25), (0,0,0), (255,255,255))
-    qu = Overlay_Button(375,250, False, "         Quit", (209, 45, 25), (0,0,0), (255,255,255))
-    lose = Lose_Overlay(p, reset, qu)
+    reset = Overlay_Button(200,250, False, "            Reset", (209, 45, 25), (0,0,0), (255,255,255), e)
+    qu = Overlay_Button(375,250, False, "         Quit", (209, 45, 25), (0,0,0), (255,255,255), e)
+    lose = Lose_Overlay(p, reset, qu, e)
 
     l = Leafbug(10, 50, 100, 70)
     l.blocks.add(t.impassable)
@@ -107,7 +107,6 @@ def main():
     e.add_key(pygame.K_b, p.climb_on)
     e.add_key(pygame.K_SPACE, p.climb_off)
     e.events[pygame.MOUSEBUTTONDOWN + 1] = bu.mouse_click
-    e.events[pygame.MOUSEBUTTONDOWN] = lose.button_click
     e.events[pygame.USEREVENT + 2] = s.move
     e.events[pygame.USEREVENT + 3] = b.move
     e.events[pygame.USEREVENT + 4] = l.move

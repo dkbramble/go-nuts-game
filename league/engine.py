@@ -137,6 +137,11 @@ class Engine:
     def stop(self, time):
         self.running = False
 
+    # Restart the engine
+    def restart(self, time, res):
+        self.running = False
+        res = True
+
     # Shutdown pygame
     def end(self, time):
         pygame.quit()

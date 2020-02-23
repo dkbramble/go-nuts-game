@@ -24,7 +24,7 @@ class Overlay(league.DUGameObject):
         self.image.blit(self.text, (0, 0))
 
 class Overlay_Button(league.DUGameObject):
-    def __init__(self, x, y, display, tx, font, color1, color2):
+    def __init__(self, x, y, display, tx, font, color1, color2, engine):
         super().__init__(self)
         self._layer = 1000
         self.font = pygame.font.Font('freesansbold.ttf',20)
@@ -41,8 +41,10 @@ class Overlay_Button(league.DUGameObject):
         self.font_color = font #(0,0,0)
         self.bg_color_1 = color1 #(0, 130, 0)
         self.bg_color_2 = color2 #(127, 127, 127)
+        self.e = engine
 
     def update(self, deltaTime):
+        self.time = deltaTime
         if self.display:
             mouse = pygame.mouse.get_pos()
             if self.rect.x + 140 > mouse[0] > self.rect.x + 50 and 275 > mouse[1] > 245:
@@ -52,13 +54,15 @@ class Overlay_Button(league.DUGameObject):
             self.text = self.font.render(self.tx, True, self.font_color)
             self.image.blit(self.text, (0, 0))
         
-    def mouse_click(self):
-        mouse = pygame.mouse.get_pos()
-        if self.rect.x + 140 > mouse[0] > self.rect.x + 50 and 275 > mouse[1] > 245:
-            if "Reset" in self.tx:
-                print("YO")
-            if "Quit" in self.tx:
-                print("YOYO")
+    def mouse_click(self, deltaTime, mouse):
+        try:
+            if self.rect.x + 140 > mouse[0] > self.rect.x + 50 and 275 > mouse[1] > 245:
+                if "Reset" in self.tx:
+                    self.e.restart(deltaTime, True)
+                if "Quit" in self.tx:
+                    self.e.stop(deltaTime)
+        except:
+            pass
     def set_display(self, option):
         self.display = option
         

@@ -4,7 +4,7 @@ from components import *
 from components.overlay import Overlay_Button
 
 class Lose_Overlay(league.DUGameObject):
-    def __init__(self, player, reset, quit):
+    def __init__(self, player, reset, quit, engine):
         super().__init__(self)
         self._layer = 1001
         self.player = player
@@ -21,26 +21,30 @@ class Lose_Overlay(league.DUGameObject):
         self.quit = False
         self.reset = reset
         self.quit = quit
+        self.e = engine
 
     def update(self, deltaTime):
         if self.player.health < 1 and self.active == False:
             s = SoundManager()
-            if s.get_playing == True:
+            if s.get_playing() == True:
                 s.bgm_control()
-            #s.play_sound('horn.wav')
+            s.play_sound('horn.wav')
+            self.e.events.clear()
+            self.e.collisions.clear()
+            self.e.registered_keys.clear()
+            self.e.events[pygame.MOUSEBUTTONDOWN] = self.button_click
+            self.e.events[pygame.QUIT] = self.e.stop
             self.active = True
 
         if self.active == True:
             self.image.fill((0, 0, 0))
-            #mouse = pygame.mouse.get_pos()
-            # print("MOUSE1: " + str(mouse[0]))
-            # print("MOUSE2: " + str(mouse[1]))
             self.text = self.font.render("YOU DIED", True, (209, 45, 25))
             self.image.blit(self.text, (25, 50))
             self.reset.set_display(True)
             self.quit.set_display(True)
     def button_click(self, deltaTime):
-        self.reset.mouse_click()
-        self.quit.mouse_click()
+        mouse = pygame.mouse.get_pos()
+        self.reset.mouse_click(deltaTime, mouse)
+        self.quit.mouse_click(deltaTime, mouse)
          
 
