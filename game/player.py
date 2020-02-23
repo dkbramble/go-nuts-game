@@ -52,6 +52,7 @@ class Player(Character):
         self.image = pygame.transform.scale(self.image, (64, 64))
         self.images = self.load_images()
         self.image_num = 0
+        self.image_delay = 0
         self.image = self.images[self.state][0]
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
@@ -92,7 +93,7 @@ class Player(Character):
 
 
     def move_left(self, time):
-        self.update_image()
+        self.update_image(time)
         if not self.climb:
             amount = self.delta * time
             try:
@@ -108,7 +109,7 @@ class Player(Character):
                 pass
 
     def move_right(self, time):
-        self.update_image()
+        self.update_image(time)
         if not self.climb:
             amount = self.delta * time
             try:
@@ -139,7 +140,7 @@ class Player(Character):
         return vI + delta * (vF - vI)
 
     def move_up(self, time):
-        self.update_image()
+        self.update_image(time)
         self.collisions = []
         amount = self.delta * time
         try:
@@ -180,7 +181,7 @@ class Player(Character):
 
     def move_down(self, time):
         amount = self.gravity * time
-        self.update_image()
+        self.update_image(time)
         
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
@@ -235,12 +236,15 @@ class Player(Character):
     def climb_off(self, time):
         self.climb = False
 
-    def update_image(self):
+    def update_image(self, time):
         self.image = self.images[self.state][self.image_num]
-        if self.image_num == 3:
-            self.image_num = 0
-        else:
-            self.image_num +=1
+        now = pygame.time.get_ticks()
+        if now - self.image_delay > 75:
+            if self.image_num == 3:
+                self.image_num = 0
+            else:
+                self.image_num +=1
+            self.image_delay = now
 
     def update(self, time):
         self.rect.x = self.x

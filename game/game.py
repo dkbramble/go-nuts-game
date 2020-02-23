@@ -81,11 +81,11 @@ def main():
     e.objects.append(bu)
 
     e.collisions[p] = (q, p.ouch) 
-    pygame.time.set_timer(pygame.USEREVENT + 1, 100 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 1, 20 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 2, 125 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 3, 100 // league.Settings.gameTimeFactor)
     pygame.time.set_timer(pygame.USEREVENT + 4, 100 // league.Settings.gameTimeFactor)
-    pygame.time.set_timer(pygame.USEREVENT + 5, 100 // league.Settings.gameTimeFactor)
+    pygame.time.set_timer(pygame.USEREVENT + 5, 20 // league.Settings.gameTimeFactor)
 
     e.key_events[pygame.K_a] = p.move_left
     e.key_events[pygame.K_d] = p.move_right
