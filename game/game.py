@@ -199,6 +199,8 @@ def main():
 
         e.add_key(pygame.K_a, p.move_left)
         e.add_key(pygame.K_d, p.move_right)
+        e.add_key(pygame.K_w, p.move_up)
+        e.add_key(pygame.K_s, p.move_down)
 
         e.add_key(pygame.K_q, p.print_place)
 
@@ -219,7 +221,7 @@ def main():
         e.events[pygame.USEREVENT + 21] = s2.move
         e.events[pygame.USEREVENT + 22] = s3.move
         e.events[pygame.USEREVENT + 23] = s4.move
-        e.events[pygame.USEREVENT + 30] = p.move_down #gravity
+        e.events[pygame.USEREVENT + 30] = p.move_down_gravity
         e.events[pygame.USEREVENT + 31] = p.update_jump
 
         e.events[pygame.QUIT] = e.stop

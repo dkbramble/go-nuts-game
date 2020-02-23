@@ -162,9 +162,13 @@ class Player(Character):
                 pass
 
     def reset_idle(self):
-        if pygame.time.get_ticks() - self.state_switch_time > 100:
+        if self.state != State.IDLE and pygame.time.get_ticks() - self.state_switch_time > 100:
             self.change_state(State.IDLE)
-
+        if pygame.time.get_ticks() - self.state_switch_time > 4000:
+            s = SoundManager()
+            idle_titles = ['feelin_peckish.wav','im_ready.wav','nut_my_day.wav']
+            s.play_sound(random.choice(idle_titles))
+            self.state_switch_time = pygame.time.get_ticks()
 
     def jump(self, time):  
         
@@ -201,10 +205,11 @@ class Player(Character):
             if self.y - amount < 0:
                 raise OffScreenTopException
             else:
-                if self.jumping :
+                if self.jumping and not self.falling :
                     self.y = self.lerpY(time, self.jump_delta)
-                else:
-                    self.y = self.y - amount
+                elif self.climb:
+                    amount = self.delta * time * self.climb_direction
+                    self.x = self.x + amount * 3
                 self.update(0)
                 if len(self.collisions) != 0:
                     self.y = self.y + amount
@@ -224,14 +229,19 @@ class Player(Character):
             pass
 
     def move_down(self, time):
-        amount = self.gravity * time
+        amount = self.delta * time
+        # if self.climb:
+        #     amount = self.delta * time
         self.update_image(time)
         
         try:
             if self.y + amount > self.world_size[1] - Settings.tile_size:
                 raise OffScreenBottomException
             else:
-                self.y = self.y + amount
+                if self.climb:
+                    self.y = self.y + amount
+                else:
+                    self.y = self.y + amount/2
                 self.update(0)
                 if len(self.collisions) != 0:
                     self.y = self.y - amount
@@ -252,6 +262,27 @@ class Player(Character):
                     self.update(0)
         except:
             pass
+
+    def move_down_gravity(self, time):
+        amount = self.gravity * time
+        # if self.climb:
+        #     amount = self.delta * time
+        self.update_image(time)
+        
+        try:
+            if self.y + amount > self.world_size[1] - Settings.tile_size:
+                raise OffScreenBottomException
+            elif not self.climb:
+                self.y = self.y + amount
+                self.update(0)
+                if len(self.collisions) != 0:
+                    self.y = self.y - amount
+                    self.update(0)
+                    self.jumping = False
+                    self.falling = False
+                    self.collisions = []
+        except:
+            pass
         
     #Hold right/left to run into an impassible object and press 'k' to climb. climbing will restrict horizontal movement until either the 
     #space bar is pressed or you reach the top or bottom of a the object.
@@ -265,6 +296,8 @@ class Player(Character):
                 raise OffScreenLeftException
             else:
                 self.x = self.x + amount
+                self.falling = False
+                self.jumping = False
                 self.update(0)
                 if len(self.collisions) == 0:
                     self.x = self.x - amount
