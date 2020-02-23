@@ -149,6 +149,7 @@ class Engine:
             # Check "normal" events
             if event.type in self.events.keys():
                 self.events[event.type](self.game_delta_time)
+
         if pygame.key.get_pressed()[pygame.K_b] or pygame.key.get_pressed()[pygame.K_n]:
             pass
         elif pygame.key.get_pressed()[pygame.K_a]:
