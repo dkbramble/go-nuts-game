@@ -1,4 +1,4 @@
-import league
+import league 
 import pygame
 from components.sound_manager import SoundManager
 from components.overlay import Overlay_Button
@@ -25,6 +25,7 @@ class Lose_Overlay(league.DUGameObject):
 
     def update(self, deltaTime):
         if self.player.health < 1 and self.active == False:
+            self.player.sound = False
             s = SoundManager()
             if s.get_playing() == True:
                 s.bgm_control()

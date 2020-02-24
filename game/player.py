@@ -82,7 +82,11 @@ class Player(Character):
         self.collider.rect = self.collider.image.get_rect()
         # Overlay
         self.font = pygame.font.Font('freesansbold.ttf',32)
+        # Falling 
         self.prev_y = y
+        # Idle Sounds
+        self.sound = True
+
 
     def load_images(self):
         images = {
@@ -193,7 +197,7 @@ class Player(Character):
     def reset_idle(self):
         if self.state != State.IDLE and pygame.time.get_ticks() - self.state_switch_time > 100:
             self.change_state(State.IDLE)
-        if pygame.time.get_ticks() - self.state_switch_time > 4000:
+        if pygame.time.get_ticks() - self.state_switch_time > 4000 and self.sound:
             s = SoundManager()
             idle_titles = ['feelin_peckish.wav','im_ready.wav','nut_my_day.wav']
             s.play_sound(random.choice(idle_titles))

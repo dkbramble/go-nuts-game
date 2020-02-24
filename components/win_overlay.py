@@ -25,6 +25,7 @@ class Win_Overlay(league.DUGameObject):
 
     def update(self, deltaTime):
         if self.player.got_acorn and self.active == False:
+            self.player.sound = False
             s = SoundManager()
             if s.get_playing() == True:
                 s.bgm_control()
