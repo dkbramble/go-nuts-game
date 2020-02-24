@@ -199,7 +199,6 @@ class Player(Character):
             if (self.jump_delta >= 1) or (self.y < self.y-self.jump_height): # if player is at peak of jump
                 self.falling = True 
                 return
-                
             self.jump_delta = self.jump_delta + .03 #otherwise increase the 'time' through the jump
             if not self.falling:
                 self.move_up(time) #Move up by increment dependent on lerp.
