@@ -4,7 +4,8 @@ from components.sound_manager import SoundManager
 from components.overlay import Overlay_Button
 
 class Lose_Overlay(league.DUGameObject):
-     """This Window pops up when the player has died. It offers 
+
+    """This Window pops up when the player has died. It offers 
      them a chance to restart the level or quit the game
 
     Fields:
@@ -53,7 +54,7 @@ class Lose_Overlay(league.DUGameObject):
             self.image.blit(self.text, (25, 50))
             self.reset.set_display(True)
             self.quit.set_display(True)
-            
+
     #Passes button clicked event to child buttons
     def button_click(self, deltaTime):
         mouse = pygame.mouse.get_pos()

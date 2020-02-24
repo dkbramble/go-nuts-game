@@ -35,7 +35,7 @@ def main():
         ##e.drawables.add(d.passable.sprites())
         m = SoundManager()
         m.bgm_start('Song_For_Someone.wav')
-        p = Player(2, 6800, 3300)
+        p = Player(2, 420, 120)
         o = Overlay(p)
         bu = MusicButton()
         p.blocks.add(t.impassable)
