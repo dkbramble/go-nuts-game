@@ -58,8 +58,10 @@ class Player(Character):
             State.JUMP: 150,
             State.RUN: 75,
             State.IDLE: 75,
-            State.CLIMB: 220
+            State.CLIMB: 220,
+            State.FALL: 150
         }
+        self.fall_enable = False
         self.reverse_climb = False
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
@@ -80,6 +82,7 @@ class Player(Character):
         self.collider.rect = self.collider.image.get_rect()
         # Overlay
         self.font = pygame.font.Font('freesansbold.ttf',32)
+        self.prev_y = y
 
     def load_images(self):
         images = {
@@ -92,6 +95,10 @@ class Player(Character):
                 Direction.WEST: []
             },
             State.JUMP: {
+                Direction.EAST: [],
+                Direction.WEST: []
+            },            
+            State.FALL: {
                 Direction.EAST: [],
                 Direction.WEST: []
             },
@@ -116,6 +123,11 @@ class Player(Character):
             tmp = pygame.transform.scale(tmp, (64, 64))
             images[State.JUMP][Direction.EAST].append(tmp)
             images[State.JUMP][Direction.WEST].append(pygame.transform.flip(tmp, True, False))
+        for i in range(3,5):
+            tmp = sprites.sprites[i+9].image
+            tmp = pygame.transform.scale(tmp, (64, 64))
+            images[State.FALL][Direction.EAST].append(tmp)
+            images[State.FALL][Direction.WEST].append(pygame.transform.flip(tmp, True, False))
         for i in range(0,4):
             tmp = sprites.sprites[i+72].image
             tmp = pygame.transform.scale(tmp, (64, 64))
@@ -140,7 +152,9 @@ class Player(Character):
 
     def move_left(self, time):
         self.update_image(time)
-        self.change_state(State.RUN)
+        if not self.state == State.FALL:
+            self.change_state(State.RUN)
+            self.fall_enable = True
         self.h_direction = Direction.WEST
         if not self.climb:
             amount = self.delta * time
@@ -158,7 +172,9 @@ class Player(Character):
 
     def move_right(self, time):
         self.update_image(time)
-        self.change_state(State.RUN)
+        if not self.state == State.FALL:
+            self.change_state(State.RUN)
+            self.fall_enable = True
         self.h_direction = Direction.EAST
         if not self.climb:
             amount = self.delta * time
@@ -259,7 +275,7 @@ class Player(Character):
             else:
                 if self.climb:
                     self.y = self.y + amount
-                else:
+                elif self.falling:
                     self.y = self.y + amount/2
                 self.update(0)
                 if len(self.collisions) != 0:
@@ -301,6 +317,7 @@ class Player(Character):
                     self.jumping = False
                     self.falling = False
                     self.collisions = []
+                
         except:
             pass
         
@@ -376,6 +393,14 @@ class Player(Character):
             if pygame.sprite.collide_rect(self, self.collider):
                 self.collisions.append(sprite)
         self.reset_idle()
+
+        if (self.y > self.prev_y + 5) and not self.climb and not self.state == State.JUMP and self.fall_enable:
+            self.change_state(State.FALL)
+            self.falling = True
+            self.prev_y = self.y
+        if not self.fall_enable:
+            self.prev_y = self.y
+
 
     def ouch(self):
         now = pygame.time.get_ticks()
