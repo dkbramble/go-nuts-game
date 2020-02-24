@@ -37,6 +37,7 @@ class State(IntEnum):
     RUN = 1
     JUMP = 2
     CLIMB = 3
+    FALL = 4
     
 from enum import IntEnum
 class Direction(IntEnum):
