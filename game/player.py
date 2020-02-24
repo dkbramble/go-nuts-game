@@ -397,12 +397,11 @@ class Player(Character):
             if pygame.sprite.collide_rect(self, self.collider):
                 self.collisions.append(sprite)
         self.reset_idle()
-
         if (self.y > self.prev_y + 5) and not self.climb and not self.state == State.JUMP and self.fall_enable:
             self.change_state(State.FALL)
             self.falling = True
             self.prev_y = self.y
-        if not self.fall_enable:
+        if not self.fall_enable or self.state == State.CLIMB:
             self.prev_y = self.y
 
 
