@@ -1,24 +1,20 @@
-# L.E.A.G.U.E.
+# Go Nutts!
 
-Laker Educationally Accessible Game Understanding Engine is an engine built on top of PyGame to teach basic game development aspects.
+Go Nutts! is a side-scrolling platformer game based on the squirrel Nutthaniel seeking to find the Golden Acorn. Run, jump, and climb to your goal while avoiding enemies!
 
-Code for this engine is written to mirror pseudocode in *Game Programming Algorithms and Techniques* by Madhav.
+To execute, run the game/game.py file. 
 
-Note that this was designed with education in mind.  Therefore optimization is not of the essence.  We will not (for instance) use concepts like DirtySprites or updating only parts of the screen, relying instead upon a more traditional (easier to understand albeit less optimal) approach.  This may mean renaming certain pygame concepts to keep closer to the textbook code.
+## Story
+Nutthaniel is a squirrel that is in search of the most treasured object to all of squirrel kind: The Golden Acorn. Nutthaniel is prepared to sacrifice anything on his quest to climb the Great Tree and gain the object of eternal popularity. Nutthaniel WILL be the coolest kid in squirrel school.
 
-There are some problems with pygame on macOS.  Be sure you use version 2.0.0dev6:
+## Controls
+* Move - W A S D (A/D for left and right, W/S for climbing up/down and fast falling)
+* Jump - SPACE
+* Climb - While running into a wall, press K.
 
-pip install pygame==2.0.0.dev6
+## L.E.A.G.U.E.
+This game uses the L.E.A.G.U.E engine as a base. 
+More information on the engine can be found at https://github.com/irawoodring/league
 
-**Be sure you are using Python 3.**
-
-# Classes
-
-**Engine** - the core game engine.  No game logic should go here, merely the game loop.
-
-The engine handles events, calls update(deltaTime) on all updateable objects (held in self.objects) and draws all objects in self.drawables.
-
-**Graphics** - a utility class for graphics functions.  Includes tilemaps, spritesheets, and cameras.
-
-**Settings** - a static class used to hold default values needed by the Engine class.  Be sure to set values to your game's values before starting the engine.
-
+## OTHER
+We are using Pygame version 2.0.0.dev6 and Python 3 as the core of our game.
