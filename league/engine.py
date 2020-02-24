@@ -111,7 +111,8 @@ class Engine:
         for i in self.collisions.keys():
             for obj in self.collisions[i]:
                 if pygame.sprite.collide_rect(i[0], obj):
-                    i[1]()
+                    if abs(obj.rect.x - obj.x) <= 20 and abs(obj.rect.y - obj.y) <= 20:
+                        i[1]()
 
     def add_group(self, group):
         self.drawables.add(group.sprites())

@@ -113,7 +113,7 @@ class Player(Character):
             tmp = pygame.transform.scale(tmp, (64, 64))
             images[State.IDLE][Direction.EAST].append(tmp)
             images[State.IDLE][Direction.WEST].append(pygame.transform.flip(tmp, True, False))
-        for i in range(0,11):
+        for i in range(0,8):
             tmp = sprites.sprites[i+33].image
             tmp = pygame.transform.scale(tmp, (64, 64))
             images[State.RUN][Direction.EAST].append(tmp)
@@ -357,6 +357,7 @@ class Player(Character):
         self.image = self.images[self.state][self.h_direction][self.image_num]
         now = pygame.time.get_ticks()
         images_size = len(self.images[self.state][self.h_direction])
+
         if now - self.image_delay > self.animation_delays[self.state]:
             if self.state == State.JUMP and self.image_num == images_size-1:
                 self.image_num -= 1

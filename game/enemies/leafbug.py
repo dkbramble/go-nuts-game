@@ -86,8 +86,6 @@ class Leafbug(Character):
             self.image_num += 1 
 
     def get_next_direction(self):
-        # print((self.move_order.index(self.direction)+1)%len(self.move_order))
-        # print(self.move_order[(self.move_order.index(self.direction)+1)%len(self.move_order)])
         return self.move_order[(self.move_order.index(self.direction)+1)%len(self.move_order)]
 
     def change_direction(self, direction):
