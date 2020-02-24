@@ -12,16 +12,17 @@ class Spider(Character):
     """
     def __init__(self, z=0, x=0, y=0, motion_range=100, motion_type ="h", delta=400):
         super().__init__(z, x, y)
-        # Where the player is positioned
+        # Where the spider is positioned
         self.x = x
         self.y = y
         self.next_x = x
         self.next_y = y
-        # Range of motion spider will have
 
+        # Set motion type and range for spider
         self.motion_range = motion_range
         self.motion_type = motion_type
 
+        # Assigns directions to movement functions for simpler movement
         self.cardinal_movement = {
             Direction.NORTH: self.move_north,
             Direction.SOUTH: self.move_south,
@@ -44,8 +45,8 @@ class Spider(Character):
             "s": [Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH]
         }
         self.move_order = movement_orders[motion_type]
-        # self.motion_func = movement_funcs[motion_type]
-        # Tracks state of direction. D - Down. U - Up
+
+        # Current animation and movement direction
         self.direction = self.move_order[0]
         self.change_direction(self.direction)
 
@@ -55,17 +56,12 @@ class Spider(Character):
         # Tracks state of direction. D - Down. U - Up
 
         self.delta = 400
-        # The image to use.  This will change frequently
-        # in an animated Player class.
-        # self.sprites = Spritesheet("./enemies/LPC_Spiders/spider01.png", Settings.tile_size/2, 10)
-        # self.sp = self.sprites.sprites[2]
+        # Loads all images for animations
         self.image_num = 0
         self.images = self.load_images()
-        # for i in range(0,6):
-        #     self.images.append(self.sprites.sprites[i+4].image)
+
         self.image = self.images[self.direction][0]
-        # self.image = pygame.image.load('../assets/cartoon-spider-png-1.png').convert_alpha()
-        # self.image = pygame.transform.scale(self.image, (64, 64))
+
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
         self.world_size = (Settings.width, Settings.height)
@@ -79,6 +75,7 @@ class Spider(Character):
         self.collider.image = pygame.Surface([int(Settings.tile_size/2), int(Settings.tile_size/2)])
         self.collider.rect = self.collider.image.get_rect()
 
+    # Load spritesheet for animation 
     def load_images(self):
         sprites = Spritesheet("./enemies/LPC_Spiders/spider01.png", int(Settings.tile_size/2), 10)
         images = {
@@ -94,13 +91,16 @@ class Spider(Character):
             images[Direction.EAST].append(sprites.sprites[i+33].image)
         return images
 
+    #Updates animation image to next in the series
     def update_image(self):
         self.image = self.images[self.direction][self.image_num]
+
         if self.image_num == 5:
             self.image_num = 0
         else:
             self.image_num += 1 
 
+    # Get next direction for the initialized movement shape.
     def get_next_direction(self):
         return self.move_order[(self.move_order.index(self.direction)+1)%len(self.move_order)]
 
@@ -116,14 +116,16 @@ class Spider(Character):
             self.next_x = self.next_x - self.motion_range
             self.h_direction = direction
 
+    # Move based on curernt direction
     def move(self, time):
         self.collisions = []
         amount = self.delta * time
         self.update_image()
-        # self.movement.move(amount)
         next_dir = self.get_next_direction()
         if self.cardinal_movement[self.direction](amount, next_dir):
             self.change_direction(next_dir)
+
+    #Movement methods for each cardinal direction
 
     def move_north(self, amount, next_dir):
         self.y = self.y - amount
@@ -142,7 +144,7 @@ class Spider(Character):
         self.y = self.y + amount
         self.update(0)
         if len(self.collisions) != 0:
-            self.y = self.y - 2*amount
+            self.y = self.y - amount
             self.update(0)
             self.direction = next_dir
             return True

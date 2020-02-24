@@ -12,11 +12,12 @@ class Leafbug(Character):
         self.y = y
         self.next_x = x
         self.next_y = y
-        # Range of motion spider will have
 
+        # Set motion type and range for spider
         self.motion_range = motion_range
         self.motion_type = motion_type
 
+        # Assigns directions to movement functions for simpler movement
         self.cardinal_movement = {
             Direction.NORTH: self.move_north,
             Direction.SOUTH: self.move_south,
@@ -39,8 +40,8 @@ class Leafbug(Character):
             "s": [Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH]
         }
         self.move_order = movement_orders[motion_type]
-        # self.motion_func = movement_funcs[motion_type]
-        # Tracks state of direction. D - Down. U - Up
+
+        # Current animation and movement direction
         self.h_direction = Direction.WEST
         self.direction = self.move_order[0]
         self.change_direction(self.direction)
@@ -77,6 +78,7 @@ class Leafbug(Character):
         self.collider.image = pygame.Surface([int(Settings.tile_size/2), int(Settings.tile_size/2)])
         self.collider.rect = self.collider.image.get_rect()
 
+    #Updates animation image to next in the series
     def update_image(self):
         self.image = self.images[self.h_direction][self.image_num]
 
@@ -85,6 +87,7 @@ class Leafbug(Character):
         else:
             self.image_num += 1 
 
+    # Get next direction for the initialized movement shape.
     def get_next_direction(self):
         return self.move_order[(self.move_order.index(self.direction)+1)%len(self.move_order)]
 
@@ -100,6 +103,7 @@ class Leafbug(Character):
             self.next_x = self.next_x - self.motion_range
             self.h_direction = direction
 
+    # Move based on curernt direction
     def move(self, time):
         self.collisions = []
         amount = self.delta * time
@@ -107,6 +111,8 @@ class Leafbug(Character):
         next_dir = self.get_next_direction()
         if self.cardinal_movement[self.direction](amount, next_dir):
             self.change_direction(next_dir)
+
+    #Movement methods for each cardinal direction
 
     def move_north(self, amount, next_dir):
         self.y = self.y - amount
@@ -116,7 +122,7 @@ class Leafbug(Character):
             self.update(0)
             self.direction = next_dir
             return True
-        if  self.y - self.next_y <= 0:
+        if  self.y <= self.next_y:
             self.direction = next_dir
             return True
         return False
@@ -125,11 +131,11 @@ class Leafbug(Character):
         self.y = self.y + amount
         self.update(0)
         if len(self.collisions) != 0:
-            self.y = self.y - 2*amount
+            self.y = self.y - amount
             self.update(0)
             self.direction = next_dir
             return True
-        if self.y - self.next_y >= self.motion_range:
+        if self.y >= self.next_y:
             self.direction = next_dir
             return True
         return False

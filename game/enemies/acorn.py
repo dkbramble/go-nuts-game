@@ -8,7 +8,7 @@ class Acorn(Character):
 
     def __init__(self, z=0, x=0, y=0):
         super().__init__(z, x, y)
-        # Where the player is positioned
+        # Where the acorn is positioned
         self.x = x
         self.y = y
         self.next_x = x

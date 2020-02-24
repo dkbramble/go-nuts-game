@@ -8,12 +8,12 @@ class Bee(Character):
 
     def __init__(self, z=0, x=0, y=0, motion_range=100, motion_type="h", delta = 400):
         super().__init__(z, x, y)
-        # Where the player is positioned
+        # Where the bee is positioned
         self.x = x
         self.y = y
         self.next_x = x
         self.next_y = y
-        # Range of motion spider will have
+        # Range of motion the bee will have
         self.motion_range = motion_range
         self.motion_type = motion_type
 
@@ -40,18 +40,16 @@ class Bee(Character):
             "s": [Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.NORTH]
         }
         self.move_order = movement_orders[motion_type]
-        # self.motion_func = movement_funcs[motion_type]
-        # Tracks state of direction. D - Down. U - Up
+
+        # Direction initialization
         self.h_direction = Direction.WEST
         self.direction = self.move_order[0]
         self.change_direction(self.direction)
 
         self.delta = delta
-        # The image to use.  This will change frequently
-        # in an animated Player class.
+        # Load in images to animate bee
         self.image_num = 0
         self.images = {}
-        temp = 0
         right = []
         left = []
         for filename in sorted(os.listdir("./enemies/bee/")):
@@ -61,8 +59,8 @@ class Bee(Character):
             left.append(pygame.transform.flip(tmp, True, False))
         self.images[Direction.EAST] = right
         self.images[Direction.WEST] = left
-        # self.images = pygame.image.load('../enemies/bee/bee-0.png').convert_alpha()
         self.image = self.images[self.h_direction][0]
+        
         self.rect = self.image.get_rect()
         # How big the world is, so we can check for boundries
         self.world_size = (Settings.width, Settings.height)
@@ -77,6 +75,7 @@ class Bee(Character):
         self.collider.rect = self.collider.image.get_rect()
         self.movement = Movement(self,motion_range,motion_type)
 
+    #Updates animation image to next in the series
     def update_image(self):
         self.image = self.images[self.h_direction][self.image_num]
 
@@ -85,6 +84,7 @@ class Bee(Character):
         else:
         	self.image_num += 1 
 
+    # Get next direction for the initialized movement shape.
     def get_next_direction(self):
         return self.move_order[(self.move_order.index(self.direction)+1)%len(self.move_order)]
 
@@ -100,14 +100,16 @@ class Bee(Character):
             self.next_x = self.next_x - self.motion_range
             self.h_direction = direction
 
+    # Move based on curernt direction
     def move(self, time):
         self.collisions = []
         amount = self.delta * time
         self.update_image()
-        # self.movement.move(amount)
         next_dir = self.get_next_direction()
         if self.cardinal_movement[self.direction](amount, next_dir):
             self.change_direction(next_dir)
+
+    #Movement methods for each cardinal direction
 
     def move_north(self, amount, next_dir):
         self.y = self.y - amount
