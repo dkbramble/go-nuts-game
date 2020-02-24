@@ -4,6 +4,14 @@ from components.sound_manager import SoundManager
 from components.overlay import Overlay_Button
 
 class Win_Overlay(league.DUGameObject):
+    """This Window pops up when the player has gotten the acorn. It offers 
+     them a chance to restart the level or quit the game.
+
+    Fields:
+    player - the controlled player to determine health
+    reset + quit - the two buttons that are rendered alongside the popup
+    engine - the game engine to manipulate rendering  
+    """
     def __init__(self, player, reset, quit, engine):
         super().__init__(self)
         self._layer = 1001
@@ -23,6 +31,7 @@ class Win_Overlay(league.DUGameObject):
         self.quit = quit
         self.e = engine
 
+    #Checks for winning conditions conditions. If true, stop the entire game and render the popup
     def update(self, deltaTime):
         if self.player.got_acorn and self.active == False:
             self.player.sound = False
@@ -44,16 +53,9 @@ class Win_Overlay(league.DUGameObject):
             self.image.blit(self.text, (25, 50))
             self.reset.set_display(True)
             self.quit.set_display(True)
+
+    #Passes button clicked event to child buttons
     def button_click(self, deltaTime):
         mouse = pygame.mouse.get_pos()
         self.reset.mouse_click(deltaTime, mouse)
         self.quit.mouse_click(deltaTime, mouse)
-         
-
-
-
-    # def update(self, deltaTime):
-    #     if self.player.got_acorn:
-    #         self.image.fill((209, 45, 25))
-    #         self.text = self.font.render("YOU WIN!", True, (53,50,150))
-    #         self.image.blit(self.text, (25, 50))

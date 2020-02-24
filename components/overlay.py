@@ -25,6 +25,18 @@ class Overlay(league.DUGameObject):
         self.image.blit(self.text, (0, 0))
 
 class Overlay_Button(league.DUGameObject):
+    """This is for the quit and reset buttons that join an overlay popup.
+    The fields allow for customization of the text and colors
+
+    Fields:
+    x/y - where they are placed
+    display - is it rendering?
+    tx - display text
+    font - font color
+    color - initial bg color
+    color1 - hover bg color
+    engine - the game engine to render
+    """
     def __init__(self, x, y, display, tx, font, color1, color2, engine):
         super().__init__(self)
         self._layer = 1000

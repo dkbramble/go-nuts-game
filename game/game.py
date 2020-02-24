@@ -17,7 +17,7 @@ from components.overlay import Overlay_Button
 
 
 def main():
-    gamin = True
+    gamin = True #reset indicator
     while(gamin):
         gamin = False
         e = league.Engine("Go Nutts!")
@@ -87,7 +87,6 @@ def main():
         ac.world_size = world_size
         ac.rect = ac.image.get_rect()
         
-
         l = Leafbug(10, 2213, 3103, 500, "h")
         l.blocks.add(t.impassable)
         l.world_size = world_size
@@ -107,8 +106,6 @@ def main():
         l4.blocks.add(t.impassable)
         l4.world_size = world_size
         l4.rect = l4.image.get_rect()
-
-        
        
         resetL = Overlay_Button(200,250, False, "            Reset", (209, 45, 25), (0,0,0), (255,255,255), e)
         quL = Overlay_Button(375,250, False, "         Quit", (209, 45, 25), (0,0,0), (255,255,255), e)
@@ -136,7 +133,6 @@ def main():
         e.objects.append(s2)
         e.objects.append(s3)
         e.objects.append(s4)
-
 
         #Adding Drawables
         e.drawables.add(p)

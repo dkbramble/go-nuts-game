@@ -4,6 +4,14 @@ from components.sound_manager import SoundManager
 from components.overlay import Overlay_Button
 
 class Lose_Overlay(league.DUGameObject):
+     """This Window pops up when the player has died. It offers 
+     them a chance to restart the level or quit the game
+
+    Fields:
+    player - the controlled player to determine health
+    reset + quit - the two buttons that are rendered alongside the popup
+    engine - the game engine to manipulate rendering  
+    """
     def __init__(self, player, reset, quit, engine):
         super().__init__(self)
         self._layer = 1001
@@ -23,6 +31,7 @@ class Lose_Overlay(league.DUGameObject):
         self.quit = quit
         self.e = engine
 
+    #Checks for losing conditions. If true, stop the entire game and render the popup
     def update(self, deltaTime):
         if self.player.health < 1 and self.active == False:
             self.player.sound = False
@@ -44,6 +53,8 @@ class Lose_Overlay(league.DUGameObject):
             self.image.blit(self.text, (25, 50))
             self.reset.set_display(True)
             self.quit.set_display(True)
+            
+    #Passes button clicked event to child buttons
     def button_click(self, deltaTime):
         mouse = pygame.mouse.get_pos()
         self.reset.mouse_click(deltaTime, mouse)
