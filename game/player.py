@@ -248,22 +248,26 @@ class Player(Character):
                 elif self.climb:
                     amount2 = self.delta * time * self.climb_direction
                     self.x = self.x + amount2 * 3
-                    self.y = self.y - amount
                 self.update(0)
                 if len(self.collisions) != 0 and not self.climb:
-                    self.y = self.y + amount
                     self.falling = True
                     self.update(0)
                     self.collisions = []
             if self.climb:
-                amount = self.delta * time * self.climb_direction
-                self.x = self.x + amount * 3
+                amountx = self.delta * time * self.climb_direction
+                self.x = self.x + amountx * 3
                 self.update(0)
                 if len(self.collisions) == 0:
                     self.climb = False
                 while(len(self.collisions) != 0):
-                    self.x = self.x - amount
+                    self.x = self.x - amountx
                     self.update(0)
+                self.y = self.y - amount
+                self.update(0)
+                if len(self.collisions) != 0:
+                    self.y = self.y + amount
+                    self.update(0)
+                    self.collisions = []
 
         except: 
             pass
