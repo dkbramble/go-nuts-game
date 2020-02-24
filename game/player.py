@@ -22,7 +22,7 @@ class Player(Character):
         self.climb_direction = 0
         
         #movement constants
-        self.jump_height = 150
+        self.jump_height = 100
         #defines how far along in the jump we are 0->1
         self.jump_delta = 0
         self.jump_start = self.y
@@ -226,10 +226,11 @@ class Player(Character):
                 if self.jumping and not self.falling :
                     self.y = self.lerpY(time, self.jump_delta)
                 elif self.climb:
-                    amount = self.delta * time * self.climb_direction
-                    self.x = self.x + amount * 3
+                    amount2 = self.delta * time * self.climb_direction
+                    self.x = self.x + amount2 * 3
+                    self.y = self.y - amount
                 self.update(0)
-                if len(self.collisions) != 0:
+                if len(self.collisions) != 0 and not self.climb:
                     self.y = self.y + amount
                     self.falling = True
                     self.update(0)
@@ -243,6 +244,7 @@ class Player(Character):
                 while(len(self.collisions) != 0):
                     self.x = self.x - amount
                     self.update(0)
+
         except: 
             pass
 

@@ -74,7 +74,7 @@ class Leafbug(Character):
         self.collisions = []
 
         self.collider = Drawable()
-        self.collider.image = pygame.Surface([Settings.tile_size, Settings.tile_size])
+        self.collider.image = pygame.Surface([int(Settings.tile_size/2), int(Settings.tile_size/2)])
         self.collider.rect = self.collider.image.get_rect()
 
     def update_image(self):

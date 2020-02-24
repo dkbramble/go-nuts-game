@@ -177,7 +177,7 @@ def main():
         e.drawables.add(lose)
         e.drawables.add(w)
 
-        e.collisions[(p, p.ouch)] = [s,s2,s3,s4,b,b2,b3,b4,l,l3,l4]
+        e.collisions[(p, p.ouch)] = [s,s2,s3,s4,b,b2,b3,b4,l,l2,l3,l4]
         e.collisions[(p, p.win)] = [ac]
         #Bees
         pygame.time.set_timer(pygame.USEREVENT + 1, 100 // league.Settings.gameTimeFactor)
