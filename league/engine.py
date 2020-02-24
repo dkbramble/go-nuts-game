@@ -166,7 +166,8 @@ class Engine:
             if pygame.key.get_pressed()[pygame.K_k]:
                 self.key_events[pygame.K_b](self.game_delta_time, 1) 
         for key in self.registered_keys:
-            # Check if these key_event keys were presseds
-            if pygame.key.get_pressed()[key]:
-                self.key_events[key](self.game_delta_time) 
+            if not key == pygame.K_b:
+            # Check if these key_event keys were pressed
+                if pygame.key.get_pressed()[key]:
+                    self.key_events[key](self.game_delta_time) 
         
